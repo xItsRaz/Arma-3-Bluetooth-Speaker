@@ -1,0 +1,13 @@
+# Music is copyrighted - keep it local, never push it
+jbl_speaker/sounds/*.ogg
+jbl_speaker/sounds/*.mp3
+jbl_speaker/sounds/*.wav
+
+# Build output
+@JBLSpeaker/
+*.pbo
+*.bisign
+*.biprivatekey
+extension/target/
+
+.DS_Store
