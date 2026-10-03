@@ -37,3 +37,10 @@
 
 // Synced clock: serverTime in MP, time in SP
 #define NOW ([time, serverTime] select isMultiplayer)
+
+// Inventory form (PLAN.md section 9): a magazine whose rounds are battery % + 1
+#define MAG_SPEAKER   "jbl_speaker_mag"
+#define VAR_BATTERY   "jbl_batteryPct"
+// Backpack clip: the unit points at its speaker, the speaker at its unit
+#define VAR_CLIPPED    "jbl_clippedSpeaker"
+#define VAR_CLIPPED_TO "jbl_clippedTo"

@@ -7,10 +7,11 @@ class CfgPatches {
         units[] = {"jbl_speaker"};
         weapons[] = {};
         requiredVersion = REQUIRED_VERSION;
-        requiredAddons[] = {"jbl_audio", "ace_interact_menu", "ace_interaction"};
+        requiredAddons[] = {"jbl_audio", "ace_interact_menu", "ace_interaction", "ace_dragging", "ace_cargo"};
         VERSION_CONFIG;
     };
 };
 
 #include "CfgEventHandlers.hpp"
+#include "CfgMagazines.hpp"
 #include "CfgVehicles.hpp"

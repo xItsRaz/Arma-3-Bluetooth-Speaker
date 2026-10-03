@@ -1,7 +1,14 @@
+PREP(clip);
+PREP(create);
+PREP(drop);
+PREP(dropEH);
+PREP(giveMag);
 PREP(info);
 PREP(init);
 PREP(keybind);
 PREP(modifyMenu);
 PREP(modifyVolume);
+PREP(pickup);
+PREP(place);
 PREP(playlistChildren);
 PREP(send);

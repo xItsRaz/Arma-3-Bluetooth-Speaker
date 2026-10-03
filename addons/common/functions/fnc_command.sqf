@@ -11,6 +11,7 @@
  * 2: Command <STRING>
  *    Playback: "play", "stop", "next", "prev", "track" (args: index), "volume" (args: 1-5)
  *    PartyBoost: "link", "unlink"
+ *    Inventory: "pickup" (stops the music), "clip" (pick up onto your backpack, keeps playing)
  *    Ownership: "claim", "lock", "unlock", "release"
  * 3: Command arguments <ANY> (default: [])
  *
@@ -55,6 +56,16 @@ switch (_command) do {
     case "unlink": {
         if !([_speaker, _player] call FUNC(canControl)) exitWith { [_speaker] call _deny; };
         [_speaker, _player] call ([EFUNC(audio,unlink), EFUNC(audio,link)] select (_command == "link"));
+    };
+
+    case "pickup": {
+        if !([_speaker, _player] call FUNC(canControl)) exitWith { [_speaker] call _deny; };
+        [_speaker, _player] call EFUNC(speaker,pickup);
+    };
+
+    case "clip": {
+        if !([_speaker, _player] call FUNC(canControl)) exitWith { [_speaker] call _deny; };
+        [_speaker, _player, true] call EFUNC(speaker,pickup);
     };
 
     case "claim": {

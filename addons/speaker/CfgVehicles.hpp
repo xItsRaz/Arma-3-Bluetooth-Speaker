@@ -4,6 +4,9 @@ class CBA_Extended_EventHandlers_base;
 // Conditions run every frame while the menu is open, so they only read variables.
 // The server checks permission again for every command.
 
+// 2 s progress bar, then the server command (cancels if you walk away)
+#define PICKUP_STATEMENT(cmd) QUOTE([ARR_6(2,[ARR_2(_target,_player)],{ [ARR_3(_this select 0 select 0,_this select 0 select 1,cmd)] call FUNC(send) },{},'Picking up speaker...',{ (_this select 0 select 1) distance (_this select 0 select 0) < 4 })] call ace_common_fnc_progressBar)
+
 class CfgVehicles {
     class Land_FMradio_F;
     // Placeholder model until the Charge-style model exists (PLAN.md section 15)
@@ -14,6 +17,15 @@ class CfgVehicles {
         jbl_rangeSetting = "jbl_audio_rangeSpeaker"; // CBA setting with the range
         jbl_range = 75;          // fallback cut-off distance in metres
         jbl_soundSuffix = "";    // normal loudness (the PartyBox will use "_party")
+
+        // ACE carry (small and light: carried in front of the chest, can't be dragged) - tune in game
+        ace_dragging_canCarry = 1;
+        ace_dragging_carryPosition[] = {0, 0.6, 0.9};
+        ace_dragging_carryDirection = 90;
+        ace_dragging_canDrag = 0;
+        // ACE cargo: fits in any vehicle with cargo space
+        ace_cargo_size = 1;
+        ace_cargo_canLoad = 1;
 
         class EventHandlers {
             class CBA_Extended_EventHandlers: CBA_Extended_EventHandlers_base {};
@@ -139,6 +151,22 @@ class CfgVehicles {
                         };
                     };
 
+                    class GVAR(pickup) {
+                        displayName = "Pick up";
+                        condition = "!(_target getVariable ['jbl_playing', false]) && {[_target, _player] call jbl_common_fnc_canControl} && {_player canAdd ['jbl_speaker_mag', 1]}";
+                        statement = PICKUP_STATEMENT('pickup');
+                    };
+                    class GVAR(pickupStop) {
+                        displayName = "Turn off and pick up";
+                        condition = "_target getVariable ['jbl_playing', false] && {[_target, _player] call jbl_common_fnc_canControl} && {_player canAdd ['jbl_speaker_mag', 1]}";
+                        statement = PICKUP_STATEMENT('pickup');
+                    };
+                    class GVAR(pickupKeep) {
+                        displayName = "Pick up and keep playing";
+                        condition = "_target getVariable ['jbl_playing', false] && {[_target, _player] call jbl_common_fnc_canControl} && {backpack _player != ''} && {isNull (_player getVariable ['jbl_clippedSpeaker', objNull])} && {isNull (_target getVariable ['jbl_clippedTo', objNull])}";
+                        statement = PICKUP_STATEMENT('clip');
+                    };
+
                     class GVAR(info) {
                         displayName = "Speaker info";
                         condition = "true";
@@ -149,10 +177,28 @@ class CfgVehicles {
         };
     };
 
-    // Self-interaction: mute every speaker just for you
+    // Self-interaction: place / clip a speaker from your inventory, mute speakers just for you
     class Man;
     class CAManBase: Man {
         class ACE_SelfActions {
+            class GVAR(place) {
+                displayName = "Place speaker";
+                condition = "'jbl_speaker_mag' in magazines _player && {isNull objectParent _player}";
+                statement = "[_player, false] call jbl_speaker_fnc_place";
+                exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
+            };
+            class GVAR(clip) {
+                displayName = "Clip speaker to backpack";
+                condition = "'jbl_speaker_mag' in magazines _player && {backpack _player != ''} && {isNull (_player getVariable ['jbl_clippedSpeaker', objNull])}";
+                statement = "[_player, true] call jbl_speaker_fnc_place";
+                exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
+            };
+            class GVAR(unclip) {
+                displayName = "Unclip speaker";
+                condition = "!isNull (_player getVariable ['jbl_clippedSpeaker', objNull])";
+                statement = "['jbl_speaker_drop', [_player, 0.8]] call CBA_fnc_serverEvent";
+                exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
+            };
             class GVAR(mute) {
                 displayName = "Mute all speakers (for me)";
                 condition = "!jbl_audio_muteAll";

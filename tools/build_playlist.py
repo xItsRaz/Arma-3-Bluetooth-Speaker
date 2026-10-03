@@ -19,7 +19,9 @@ TITLES = SOUNDS / "titles.json"  # written by convert_music.py: file name -> rea
 #   <track>_v<1-5><suffix>  volume level 1-5 (4 = normal), picked by the speaker's volume
 #   suffix "" or "_party"   speaker type, picked by jbl_soundSuffix in its config (3.16 = +10 dB)
 # The plain <track> class is the fallback.
-LEVELS = {1: 0.25, 2: 0.45, 3: 0.7, 4: 1.0, 5: 1.4}
+# say3D fades by volume (its distance argument is only a cut-off), so a volume of 1.0 is nearly
+# inaudible after ~10 m. These are ~2.5x louder than before; raise or lower them to taste.
+LEVELS = {1: 0.6, 2: 1.1, 3: 1.7, 4: 2.5, 5: 3.5}
 TYPES = {"": 1.0, "_party": 3.16}
 VARIANTS = [("", 1.0)] + [(f"_v{lvl}{suffix}", round(vol * mult, 2))
                           for lvl, vol in LEVELS.items() for suffix, mult in TYPES.items()]
@@ -78,7 +80,8 @@ def main():
         f"    tracks[] = {{{', '.join(tracks)}}};\n"
         f"    titles[] = {{{', '.join(titles)}}};\n"
         f"    durations[] = {{{', '.join(durations)}}};\n"
-        "};\n"
+        "};\n",
+        encoding="utf-8",
     )
     print(f"Wrote {len(tracks)} tracks to {OUT}")
 
