@@ -6,7 +6,7 @@
  *
  * Arguments:
  * 0: Speaker <OBJECT>
- * 1: State [playing, trackIndex, startTime] <ARRAY> (default: [] = read from the object)
+ * 1: State [playing, trackIndex, startTime, volume] <ARRAY> (default: [] = read from the object)
  *
  * Range and loudness are fixed per speaker type, from its config:
  *   jbl_rangeSetting (CBA setting with the range), jbl_range (fallback, metres),
@@ -24,10 +24,11 @@ if (_state isEqualTo []) then {
     _state = [
         _speaker getVariable [VAR_PLAYING, false],
         _speaker getVariable [VAR_TRACK, 0],
-        _speaker getVariable [VAR_START, 0]
+        _speaker getVariable [VAR_START, 0],
+        _speaker getVariable [VAR_VOLUME, VOLUME_DEFAULT]
     ];
 };
-_state params ["_playing", "_index", "_start"];
+_state params ["_playing", "_index", "_start", ["_volume", VOLUME_DEFAULT]];
 
 private _source = _speaker getVariable [VAR_SOURCE, objNull];
 if (!isNull _source) then { deleteVehicle _source; };
@@ -47,7 +48,9 @@ if (_offset >= (_durations select _index)) exitWith {}; // server will advance
 private _type = configOf _speaker;
 // Range comes from a CBA setting named in the config, with the config value as fallback
 private _range = (missionNamespace getVariable [getText (_type >> "jbl_rangeSetting"), getNumber (_type >> "jbl_range")]) max 1;
-private _soundClass = (_tracks select _index) + getText (_type >> "jbl_soundSuffix");
+// Sound class = <track>_v<level><type suffix>; your personal setting can lower the level
+private _level = (_volume - GVAR(personalVolume)) max 1 min VOLUME_MAX;
+private _soundClass = format ["%1_v%2%3", _tracks select _index, _level, getText (_type >> "jbl_soundSuffix")];
 if (!isClass (configFile >> "CfgSounds" >> _soundClass)) then { _soundClass = _tracks select _index; };
 
 _source = _speaker say3D [_soundClass, _range, 1, false, _offset];

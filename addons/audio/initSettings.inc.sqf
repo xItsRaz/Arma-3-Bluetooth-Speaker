@@ -30,9 +30,14 @@
     ["JBL Speaker", "Personal"],
     false,
     0,
-    {
-        // Apply right away to every speaker in the mission
-        if (!hasInterface || {isNil QFUNC(syncLocal)}) exitWith {};
-        { [_x] call FUNC(syncLocal); } forEach allMissionObjects "jbl_speaker";
-    }
+    { call FUNC(resyncAll) }
+] call CBA_fnc_addSetting;
+
+[
+    QGVAR(personalVolume), "LIST",
+    ["My speaker volume", "Play every speaker quieter just for you. Other players are not affected."],
+    ["JBL Speaker", "Personal"],
+    [[0, 1, 2, 3], ["Full", "1 step quieter", "2 steps quieter", "3 steps quieter"], 0],
+    0,
+    { call FUNC(resyncAll) }
 ] call CBA_fnc_addSetting;

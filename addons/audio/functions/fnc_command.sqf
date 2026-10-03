@@ -7,8 +7,8 @@
  *
  * Arguments:
  * 0: Speaker <OBJECT>
- * 1: Command <STRING> ("play", "stop", "next", "prev")
- * 2: Command arguments <ANY> (unused for now)
+ * 1: Command <STRING> ("play", "stop", "next", "prev", "track", "volume")
+ * 2: Command arguments <ANY> ("track": index, "volume": level 1-5)
  *
  * Return Value:
  * None
@@ -24,23 +24,6 @@ if (_count == 0) exitWith {
 
 private _index = (_speaker getVariable [VAR_TRACK, 0]) min (_count - 1);
 
-// Send the state to every player, for this speaker and its PartyBoost followers
-private _broadcast = {
-    private _state = [
-        _speaker getVariable [VAR_PLAYING, false],
-        _speaker getVariable [VAR_TRACK, 0],
-        _speaker getVariable [VAR_START, 0]
-    ];
-    {
-        if (_x != _speaker) then {
-            _x setVariable [VAR_PLAYING, _state select 0, true];
-            _x setVariable [VAR_TRACK, _state select 1, true];
-            _x setVariable [VAR_START, _state select 2, true];
-        };
-        [QGVAR(sync), [_x, _state]] call CBA_fnc_globalEvent;
-    } forEach ([_speaker] + ((_speaker getVariable [VAR_FOLLOWERS, []]) select {!isNull _x}));
-};
-
 // A new session id invalidates any pending auto-advance timer
 private _newSession = {
     private _session = (_speaker getVariable [VAR_SESSION, 0]) + 1;
@@ -54,7 +37,7 @@ private _startTrack = {
     _speaker setVariable [VAR_TRACK, _newIndex, true];
     _speaker setVariable [VAR_START, NOW, true];
     _speaker setVariable [VAR_PLAYING, true, true];
-    call _broadcast;
+    [_speaker] call FUNC(broadcast);
     [_speaker, _session] call FUNC(scheduleNext);
 };
 
@@ -62,9 +45,18 @@ switch (_command) do {
     case "play": { [_index] call _startTrack; };
     case "next": { [(_index + 1) mod _count] call _startTrack; };
     case "prev": { [(_index - 1 + _count) mod _count] call _startTrack; };
+    case "track": {
+        if (_args isEqualType 0 && {_args >= 0} && {_args < _count}) then { [floor _args] call _startTrack; };
+    };
     case "stop": {
         call _newSession;
         _speaker setVariable [VAR_PLAYING, false, true];
-        call _broadcast;
+        [_speaker] call FUNC(broadcast);
+    };
+    case "volume": {
+        if !(_args isEqualType 0) exitWith {};
+        _speaker setVariable [VAR_VOLUME, (round _args) max 1 min VOLUME_MAX, true];
+        // Players restart the song at the same moment with the new loudness
+        [_speaker] call FUNC(broadcast);
     };
 };

@@ -18,7 +18,7 @@ private _stop = {
     params ["_member"];
     _member setVariable [VAR_LEADER, objNull, true];
     _member setVariable [VAR_PLAYING, false, true];
-    [QGVAR(sync), [_member, [false, 0, 0]]] call CBA_fnc_globalEvent;
+    [QGVAR(sync), [_member, [false, 0, 0, VOLUME_DEFAULT]]] call CBA_fnc_globalEvent;
 };
 
 private _leader = _speaker getVariable [VAR_LEADER, objNull];

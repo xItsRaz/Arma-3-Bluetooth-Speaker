@@ -20,6 +20,11 @@
 #define VAR_START   "jbl_start"
 #define VAR_SESSION "jbl_session"
 #define VAR_SOURCE  "jbl_soundSource"
+#define VAR_VOLUME  "jbl_volume"
+
+// Volume levels 1-5 (sound classes <track>_v1 .. _v5, see tools/build_playlist.py)
+#define VOLUME_DEFAULT 4
+#define VOLUME_MAX     5
 
 // PartyBoost: followers point at their leader; the leader lists its followers
 #define VAR_LEADER    "jbl_linkLeader"

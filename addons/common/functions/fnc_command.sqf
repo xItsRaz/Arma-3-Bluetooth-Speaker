@@ -9,7 +9,7 @@
  * 0: Speaker <OBJECT>
  * 1: Player who sent it <OBJECT>
  * 2: Command <STRING>
- *    Playback: "play", "stop", "next", "prev"
+ *    Playback: "play", "stop", "next", "prev", "track" (args: index), "volume" (args: 1-5)
  *    PartyBoost: "link", "unlink"
  *    Ownership: "claim", "lock", "unlock", "release"
  * 3: Command arguments <ANY> (default: [])
@@ -41,7 +41,9 @@ switch (_command) do {
     case "play";
     case "stop";
     case "next";
-    case "prev": {
+    case "prev";
+    case "track";
+    case "volume": {
         // A linked speaker controls its whole PartyBoost group through the leader
         private _target = _speaker getVariable [VAR_LEADER, objNull];
         if (isNull _target) then { _target = _speaker; };

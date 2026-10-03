@@ -42,17 +42,7 @@ _leader setVariable [VAR_FOLLOWERS, _followers, true];
 
 // Bring the new followers in line with what the leader is doing right now
 if (_candidates isNotEqualTo []) then {
-    private _state = [
-        _leader getVariable [VAR_PLAYING, false],
-        _leader getVariable [VAR_TRACK, 0],
-        _leader getVariable [VAR_START, 0]
-    ];
-    {
-        _x setVariable [VAR_PLAYING, _state select 0, true];
-        _x setVariable [VAR_TRACK, _state select 1, true];
-        _x setVariable [VAR_START, _state select 2, true];
-        [QGVAR(sync), [_x, _state]] call CBA_fnc_globalEvent;
-    } forEach _candidates;
+    [_leader, _candidates] call FUNC(broadcast);
 };
 
 [_player, format ["PartyBoost: %1 speaker(s) linked (%2 of %3 in group)",

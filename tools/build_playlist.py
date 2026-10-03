@@ -15,9 +15,14 @@ SOUNDS = ADDON / "sounds"
 OUT = ADDON / "playlist.hpp"
 TITLES = SOUNDS / "titles.json"  # written by convert_music.py: file name -> real song title
 
-# One sound class per loudness. Same .ogg, so no extra file size.
-# Speaker configs pick one with jbl_soundSuffix. 3.16 = +10 dB.
-VARIANTS = [("", 1), ("_party", 3.16)]
+# Many sound classes per song, all using the same .ogg (no extra file size):
+#   <track>_v<1-5><suffix>  volume level 1-5 (4 = normal), picked by the speaker's volume
+#   suffix "" or "_party"   speaker type, picked by jbl_soundSuffix in its config (3.16 = +10 dB)
+# The plain <track> class is the fallback.
+LEVELS = {1: 0.25, 2: 0.45, 3: 0.7, 4: 1.0, 5: 1.4}
+TYPES = {"": 1.0, "_party": 3.16}
+VARIANTS = [("", 1.0)] + [(f"_v{lvl}{suffix}", round(vol * mult, 2))
+                          for lvl, vol in LEVELS.items() for suffix, mult in TYPES.items()]
 
 
 def vorbis_duration(path):

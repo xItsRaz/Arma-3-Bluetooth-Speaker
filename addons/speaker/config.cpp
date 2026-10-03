@@ -7,7 +7,7 @@ class CfgPatches {
         units[] = {"jbl_speaker"};
         weapons[] = {};
         requiredVersion = REQUIRED_VERSION;
-        requiredAddons[] = {"jbl_audio"};
+        requiredAddons[] = {"jbl_audio", "ace_interact_menu", "ace_interaction"};
         VERSION_CONFIG;
     };
 };
