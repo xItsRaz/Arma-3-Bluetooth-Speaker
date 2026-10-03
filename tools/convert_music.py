@@ -5,7 +5,8 @@ Usage: python3 tools/convert_music.py [input_folder]
 
 Needs ffmpeg (decoding) and oggenc from vorbis-tools (encoding):
     brew install ffmpeg vorbis-tools
-Already-converted songs are skipped. Put a BPM in the filename for the LED show later, e.g. "Song [128].mp3".
+Already-converted songs are skipped. Display titles live in addons/audio/sounds/titles.json;
+edit them there (English only - Arma's fonts have no Hebrew) and they are kept on later runs. Put a BPM in the filename for the LED show later, e.g. "Song [128].mp3".
 """
 import hashlib
 import json
@@ -47,7 +48,7 @@ def main():
     titles = json.loads(TITLES.read_text(encoding="utf-8")) if TITLES.exists() else {}
     for song in songs:
         out = SOUNDS / safe_name(song.stem)
-        titles[out.name] = song.stem
+        titles.setdefault(out.name, song.stem)  # keep titles you edited by hand
         if out.exists() and out.stat().st_mtime >= song.stat().st_mtime:
             print(f"skip     {song.name}")
             continue
