@@ -5,6 +5,7 @@ Arma only plays Ogg Vorbis. Convert other formats first, e.g.:
     ffmpeg -i song.mp3 -ac 1 -c:a libvorbis -q:a 5 song.ogg
 (-ac 1 = mono, which Arma positions properly in 3D.)
 """
+import json
 import re
 import sys
 from pathlib import Path
@@ -12,6 +13,7 @@ from pathlib import Path
 ADDON = Path(__file__).resolve().parent.parent / "addons" / "audio"
 SOUNDS = ADDON / "sounds"
 OUT = ADDON / "playlist.hpp"
+TITLES = SOUNDS / "titles.json"  # written by convert_music.py: file name -> real song title
 
 
 def vorbis_duration(path):
@@ -30,7 +32,8 @@ def esc(text):
 
 
 def main():
-    files = sorted(SOUNDS.glob("*.ogg"))
+    names = json.loads(TITLES.read_text(encoding="utf-8")) if TITLES.exists() else {}
+    files = sorted(SOUNDS.glob("*.ogg"), key=lambda f: names.get(f.name, f.stem).lower())
     if not files:
         sys.exit(f"No .ogg files in {SOUNDS}")
 
@@ -42,7 +45,7 @@ def main():
             print(f"skipping {f.name}: {e}")
             continue
         cls = f"jbl_track_{i:03d}_" + re.sub(r"[^A-Za-z0-9_]", "_", f.stem)[:40]
-        title = esc(f.stem)
+        title = esc(names.get(f.name, f.stem))
         sounds.append(
             f"    class {cls} {{\n"
             f'        name = "{title}";\n'

@@ -7,6 +7,9 @@ Needs ffmpeg (decoding) and oggenc from vorbis-tools (encoding):
     brew install ffmpeg vorbis-tools
 Already-converted songs are skipped. Put a BPM in the filename for the LED show later, e.g. "Song [128].mp3".
 """
+import hashlib
+import json
+import re
 import shutil
 import subprocess
 import sys
@@ -14,7 +17,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SOUNDS = ROOT / "addons" / "audio" / "sounds"
+TITLES = SOUNDS / "titles.json"
 AUDIO_EXTS = {".mp3", ".m4a", ".aac", ".flac", ".wav", ".ogg", ".opus", ".wma"}
+
+
+def safe_name(stem):
+    """ASCII-only file name (Arma is unreliable with non-English paths in PBOs), unique per song."""
+    slug = re.sub(r"[^a-z0-9]+", "_", stem.lower()).strip("_")[:32] or "track"
+    return f"{slug}_{hashlib.sha1(stem.encode()).hexdigest()[:6]}.ogg"
 
 
 def find_tool(name):
@@ -34,13 +44,15 @@ def main():
     if not songs:
         sys.exit(f"No audio files in {src}")
 
+    titles = json.loads(TITLES.read_text(encoding="utf-8")) if TITLES.exists() else {}
     for song in songs:
-        out = SOUNDS / (song.stem + ".ogg")
+        out = SOUNDS / safe_name(song.stem)
+        titles[out.name] = song.stem
         if out.exists() and out.stat().st_mtime >= song.stat().st_mtime:
             print(f"skip     {song.name}")
             continue
         decode = subprocess.Popen(
-            [ffmpeg, "-loglevel", "error", "-i", str(song), "-vn", "-ac", "1", "-ar", "44100", "-f", "wav", "-"],
+            [ffmpeg, "-loglevel", "error", "-i", str(song), "-vn", "-map_metadata", "-1", "-ac", "1", "-ar", "44100", "-f", "wav", "-"],
             stdout=subprocess.PIPE,
         )
         encode = subprocess.run([oggenc, "-Q", "-q", "5", "-o", str(out), "-"], stdin=decode.stdout)
@@ -51,6 +63,7 @@ def main():
         else:
             print(f"convert  {song.name} -> {out.name}")
 
+    TITLES.write_text(json.dumps(titles, ensure_ascii=False, indent=2), encoding="utf-8")
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_playlist.py")], check=True)
 
 
