@@ -6,7 +6,10 @@
  *
  * Arguments:
  * 0: Speaker <OBJECT>
- * 1: State [playing, trackIndex, startTime, range] <ARRAY> (default: [] = read from the object)
+ * 1: State [playing, trackIndex, startTime] <ARRAY> (default: [] = read from the object)
+ *
+ * Range and loudness are fixed per speaker type, from its config:
+ *   jbl_range (cut-off in metres), jbl_soundSuffix (e.g. "_party" for the louder sound classes)
  *
  * Return Value:
  * None
@@ -20,11 +23,10 @@ if (_state isEqualTo []) then {
     _state = [
         _speaker getVariable [VAR_PLAYING, false],
         _speaker getVariable [VAR_TRACK, 0],
-        _speaker getVariable [VAR_START, 0],
-        _speaker getVariable [VAR_RANGE, 100]
+        _speaker getVariable [VAR_START, 0]
     ];
 };
-_state params ["_playing", "_index", "_start", "_range"];
+_state params ["_playing", "_index", "_start"];
 
 private _source = _speaker getVariable [VAR_SOURCE, objNull];
 if (!isNull _source) then { deleteVehicle _source; };
@@ -41,7 +43,12 @@ if (_index >= count _tracks) exitWith {};
 private _offset = (NOW - _start) max 0;
 if (_offset >= (_durations select _index)) exitWith {}; // server will advance
 
-_source = _speaker say3D [_tracks select _index, _range, 1, false, _offset];
+private _type = configOf _speaker;
+private _range = getNumber (_type >> "jbl_range") max 1;
+private _soundClass = (_tracks select _index) + getText (_type >> "jbl_soundSuffix");
+if (!isClass (configFile >> "CfgSounds" >> _soundClass)) then { _soundClass = _tracks select _index; };
+
+_source = _speaker say3D [_soundClass, _range, 1, false, _offset];
 _speaker setVariable [VAR_SOURCE, _source];
 
 if (player distance _speaker < _range) then {

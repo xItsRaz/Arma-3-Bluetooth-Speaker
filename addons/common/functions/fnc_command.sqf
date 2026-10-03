@@ -7,7 +7,7 @@
  * Arguments:
  * 0: Speaker <OBJECT>
  * 1: Player who sent it <OBJECT>
- * 2: Command <STRING> ("play", "stop", "next", "prev", "range")
+ * 2: Command <STRING> ("play", "stop", "next", "prev")
  * 3: Command arguments <ANY> (default: [])
  *
  * Return Value:
@@ -25,8 +25,7 @@ switch (_command) do {
     case "play";
     case "stop";
     case "next";
-    case "prev";
-    case "range": {
+    case "prev": {
         [_speaker, _command, _args] call EFUNC(audio,command);
     };
     default {

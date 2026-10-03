@@ -6,7 +6,7 @@
  *
  * Arguments:
  * 0: Speaker <OBJECT>
- * 1: Command <STRING> ("play", "stop", "next", "prev", "range")
+ * 1: Command <STRING> ("play", "stop", "next", "prev")
  * 2: Command arguments <ANY> (unused for now)
  *
  * Return Value:
@@ -27,8 +27,7 @@ private _broadcast = {
     private _state = [
         _speaker getVariable [VAR_PLAYING, false],
         _speaker getVariable [VAR_TRACK, 0],
-        _speaker getVariable [VAR_START, 0],
-        _speaker getVariable [VAR_RANGE, 100]
+        _speaker getVariable [VAR_START, 0]
     ];
     [QGVAR(sync), [_speaker, _state]] call CBA_fnc_globalEvent;
 };
@@ -58,12 +57,5 @@ switch (_command) do {
         call _newSession;
         _speaker setVariable [VAR_PLAYING, false, true];
         call _broadcast;
-    };
-    case "range": {
-        private _ranges = [25, 50, 100, 200];
-        private _i = _ranges find (_speaker getVariable [VAR_RANGE, 100]);
-        _speaker setVariable [VAR_RANGE, _ranges select ((_i + 1) mod count _ranges), true];
-        // say3D range can't change mid-sound, so clients restart at the current offset
-        if (_speaker getVariable [VAR_PLAYING, false]) then { call _broadcast; };
     };
 };

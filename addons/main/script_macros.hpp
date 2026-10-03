@@ -18,7 +18,6 @@
 #define VAR_PLAYING "jbl_playing"
 #define VAR_TRACK   "jbl_track"
 #define VAR_START   "jbl_start"
-#define VAR_RANGE   "jbl_range"
 #define VAR_SESSION "jbl_session"
 #define VAR_SOURCE  "jbl_soundSource"
 
