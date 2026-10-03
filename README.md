@@ -26,4 +26,10 @@ One-time setup on the Mac: `brew install openssl@3 ffmpeg vorbis-tools` (HEMTT i
 - `include/x/cba/` holds CBA's macro headers, used by every `script_component.hpp`.
 
 ## Use in game
-In Eden, place **JBL Speaker** (Props). The scroll menu has Play, Stop, Next track, Previous track and Change range.
+In Eden, place **JBL Speaker** (Props). Until the ACE menu arrives (Session 3), everything is in the scroll menu:
+- **Play / Stop / Next / Previous**: shown only to players allowed to control the speaker.
+- **PartyBoost**: link nearby speakers so they play in sync; unlink one or all.
+- **Claim speaker**: an unowned speaker becomes yours and is locked to you. **Unlock** lets anyone use it; **Lock** takes it back; **Give up ownership** makes it unowned.
+- **Speaker info**: owner, lock, PartyBoost status and song.
+
+Admins, Zeus and single player can always control every speaker. Settings: **Options → Addon Options → JBL Speaker**.

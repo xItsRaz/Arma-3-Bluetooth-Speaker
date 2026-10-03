@@ -21,5 +21,5 @@ private _remaining = (_speaker getVariable [VAR_START, 0]) + _duration - NOW;
 [{
     params ["_speaker", "_session"];
     if (isNull _speaker || {(_speaker getVariable [VAR_SESSION, 0]) != _session}) exitWith {};
-    [_speaker, objNull, "next"] call EFUNC(common,command);
+    [_speaker, "next"] call FUNC(command);
 }, [_speaker, _session], _remaining max 0] call CBA_fnc_waitAndExecute;

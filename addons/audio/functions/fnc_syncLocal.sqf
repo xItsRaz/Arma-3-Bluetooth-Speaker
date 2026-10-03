@@ -9,7 +9,8 @@
  * 1: State [playing, trackIndex, startTime] <ARRAY> (default: [] = read from the object)
  *
  * Range and loudness are fixed per speaker type, from its config:
- *   jbl_range (cut-off in metres), jbl_soundSuffix (e.g. "_party" for the louder sound classes)
+ *   jbl_rangeSetting (CBA setting with the range), jbl_range (fallback, metres),
+ *   jbl_soundSuffix (e.g. "_party" for the louder sound classes)
  *
  * Return Value:
  * None
@@ -32,7 +33,7 @@ private _source = _speaker getVariable [VAR_SOURCE, objNull];
 if (!isNull _source) then { deleteVehicle _source; };
 _speaker setVariable [VAR_SOURCE, objNull];
 
-if (!_playing) exitWith {};
+if (!_playing || {GVAR(muteAll)}) exitWith {};
 
 private _config = configFile >> QGVAR(playlist);
 private _tracks = getArray (_config >> "tracks");
@@ -44,13 +45,15 @@ private _offset = (NOW - _start) max 0;
 if (_offset >= (_durations select _index)) exitWith {}; // server will advance
 
 private _type = configOf _speaker;
-private _range = getNumber (_type >> "jbl_range") max 1;
+// Range comes from a CBA setting named in the config, with the config value as fallback
+private _range = (missionNamespace getVariable [getText (_type >> "jbl_rangeSetting"), getNumber (_type >> "jbl_range")]) max 1;
 private _soundClass = (_tracks select _index) + getText (_type >> "jbl_soundSuffix");
 if (!isClass (configFile >> "CfgSounds" >> _soundClass)) then { _soundClass = _tracks select _index; };
 
 _source = _speaker say3D [_soundClass, _range, 1, false, _offset];
 _speaker setVariable [VAR_SOURCE, _source];
 
-if (player distance _speaker < _range) then {
-    systemChat format ["JBL: now playing %1", _titles select _index];
+if (EGVAR(common,notifications) > 0 && {player distance _speaker < _range}) then {
+    private _message = format ["JBL: now playing %1", _titles select _index];
+    if (EGVAR(common,notifications) == 1) then { systemChat _message } else { hintSilent _message };
 };

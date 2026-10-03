@@ -20,14 +20,16 @@ if (isNull _leader) then { _leader = _speaker; };
 
 private _followers = (_leader getVariable [VAR_FOLLOWERS, []]) select {!isNull _x};
 
-// Speakers that aren't already in a group (no leader, no followers of their own)
-private _candidates = (nearestObjects [_speaker, ["jbl_speaker"], LINK_RADIUS]) select {
+// Speakers this player may control that aren't already in a group
+private _candidates = (nearestObjects [_speaker, ["jbl_speaker"], GVAR(linkRadius)]) select {
     _x != _leader
+    && {[_x, _player] call EFUNC(common,canControl)}
     && {!(_x in _followers)}
     && {isNull (_x getVariable [VAR_LEADER, objNull])}
     && {(_x getVariable [VAR_FOLLOWERS, []]) isEqualTo []}
 };
-_candidates resize ((LINK_MAX - 1 - count _followers) min count _candidates max 0);
+private _max = round GVAR(linkMax);
+_candidates resize ((_max - 1 - count _followers) min count _candidates max 0);
 
 {
     // Cancel anything the speaker was doing on its own
@@ -54,6 +56,6 @@ if (_candidates isNotEqualTo []) then {
 };
 
 [_player, format ["PartyBoost: %1 speaker(s) linked (%2 of %3 in group)",
-    count _candidates, 1 + count _followers, LINK_MAX]] call EFUNC(common,notify);
+    count _candidates, 1 + count _followers, _max]] call EFUNC(common,notify);
 
 count _candidates

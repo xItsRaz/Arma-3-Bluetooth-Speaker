@@ -24,8 +24,11 @@
 // PartyBoost: followers point at their leader; the leader lists its followers
 #define VAR_LEADER    "jbl_linkLeader"
 #define VAR_FOLLOWERS "jbl_linkFollowers"
-#define LINK_RADIUS   15
-#define LINK_MAX      8
+
+// Ownership (PLAN.md section 5): owner's player UID ("" = unowned) and whether others are locked out
+#define VAR_OWNER      "jbl_owner"
+#define VAR_OWNER_NAME "jbl_ownerName"
+#define VAR_LOCKED     "jbl_locked"
 
 // Synced clock: serverTime in MP, time in SP
 #define NOW ([time, serverTime] select isMultiplayer)
