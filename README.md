@@ -14,10 +14,12 @@ Every push to GitHub builds the mod automatically:
 GitHub builds have **no music**, because songs are never pushed. To hear something, build locally with your songs (below).
 
 ## Add your music (local build)
-1. Convert songs to **mono Ogg Vorbis**: `ffmpeg -i song.mp3 -ac 1 -c:a libvorbis -q:a 5 song.ogg`
-2. Put the `.ogg` files in `addons/audio/sounds/`. They play in alphabetical order.
-3. Run `python3 tools/build_playlist.py`.
-4. Run `hemtt release`. The mod is in `.hemttout/release/`.
+One-time setup on the Mac: `brew install openssl@3 ffmpeg vorbis-tools` (HEMTT is in `~/.local/bin/hemtt`).
+
+1. Put your songs (mp3, m4a, flac, wav...) in the `music/` folder. Nothing in it is ever pushed.
+2. Run `python3 tools/convert_music.py`. It converts them to mono Ogg Vorbis in `addons/audio/sounds/` and rebuilds the playlist. Songs already converted are skipped.
+3. Run `~/.local/bin/hemtt release`. The finished mod is in `.hemttout/release/`.
+4. Copy that folder to the Windows PC as `@JBLSpeaker`.
 
 ## Build tools
 - [HEMTT](https://hemtt.dev/): `hemtt check` (lint), `hemtt build` (dev build), `hemtt release` (zip + signing).
