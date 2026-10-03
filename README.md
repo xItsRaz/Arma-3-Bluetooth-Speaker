@@ -18,8 +18,8 @@ One-time setup on the Mac: `brew install openssl@3 ffmpeg vorbis-tools` (HEMTT i
 
 1. Put your songs (mp3, m4a, flac, wav...) in the `music/` folder. Nothing in it is ever pushed.
 2. Run `python3 tools/convert_music.py`. It converts them to mono Ogg Vorbis in `addons/audio/sounds/` and rebuilds the playlist. Songs already converted are skipped.
-3. Run `~/.local/bin/hemtt release`. The finished mod is in `.hemttout/release/`.
-4. Copy that folder to the Windows PC as `@JBLSpeaker`.
+3. Run `~/.local/bin/hemtt release`. The finished mod is zipped at `releases/jbl-latest.zip` (it contains an `@jbl` folder).
+4. Copy the zip to the Windows PC, unzip it, and load `@jbl` as a local mod together with CBA_A3.
 
 ## Build tools
 - [HEMTT](https://hemtt.dev/): `hemtt check` (lint), `hemtt build` (dev build), `hemtt release` (zip + signing).
