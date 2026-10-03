@@ -1,0 +1,7 @@
+name = "JBL Speaker"
+author = "Raz"
+prefix = "jbl"
+mainprefix = "z"
+
+[files]
+include = ["mod.cpp", "README.md"]

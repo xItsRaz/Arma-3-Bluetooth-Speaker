@@ -1,21 +1,27 @@
-# JBL Speaker (Arma 3), phase 1
+# JBL Speaker (Arma 3)
 
-This is a placeable speaker that plays a playlist packed into the mod. Everyone within range hears it in sync, and players who join late pick it up at the right point in the song. It uses only scripts, so it works with BattlEye and has no dependencies (no CBA or ACE needed).
+Bluetooth-style speakers for Arma 3. Requires **CBA_A3** (ACE3 from Session 3 on). See [PLAN.md](PLAN.md) for the full design and roadmap.
 
-## Add your music
-1. Convert your songs to **mono Ogg Vorbis**. Arma can't play mp3, and mono files sound like they come from the speaker:
-   `ffmpeg -i song.mp3 -ac 1 -c:a libvorbis -q:a 5 song.ogg`
-2. Put the `.ogg` files in `jbl_speaker/sounds/`. They play in alphabetical order.
-3. Run `python3 tools/build_playlist.py`. This writes `jbl_speaker/playlist.hpp` with each track's length.
+**Current state (Session 1):** a placeable speaker that plays a playlist packed into the mod. Everyone in range hears it in sync, and players who join late catch up. It's controlled from the scroll menu for now; ACE comes in Session 3.
 
-## Build (Windows, Arma 3 Tools → Addon Builder)
-- Source directory: `jbl_speaker`
-- Destination: `@JBLSpeaker/addons`
-- Copy `mod.cpp` into `@JBLSpeaker/`
-- Load `@JBLSpeaker` in the launcher as a local mod.
+## Get a build
+Every push to GitHub builds the mod automatically:
+1. Open the repo on GitHub → **Actions** → the latest **Build** run.
+2. Download the **JBLSpeaker** artifact.
+3. Unzip it into a folder named `@JBLSpeaker`.
+4. In the Arma 3 launcher: **Mods → ⋯ → Add local mod**, pick `@JBLSpeaker`, and also load **CBA_A3**.
 
-## Use
-In Eden, find **JBL Speaker** under Props and place it. The scroll menu has Play, Stop, Next, Previous and Change range (25/50/100/200 m).
+GitHub builds have **no music**, because songs are never pushed. To hear something, build locally with your songs (below).
 
-To turn any other object into a speaker from a mission script:
-`[_obj] remoteExec ["JBL_fnc_init", 0, true];`
+## Add your music (local build)
+1. Convert songs to **mono Ogg Vorbis**: `ffmpeg -i song.mp3 -ac 1 -c:a libvorbis -q:a 5 song.ogg`
+2. Put the `.ogg` files in `addons/audio/sounds/`. They play in alphabetical order.
+3. Run `python3 tools/build_playlist.py`.
+4. Run `hemtt release`. The mod is in `.hemttout/release/`.
+
+## Build tools
+- [HEMTT](https://hemtt.dev/): `hemtt check` (lint), `hemtt build` (dev build), `hemtt release` (zip + signing).
+- `include/x/cba/` holds CBA's macro headers, used by every `script_component.hpp`.
+
+## Use in game
+In Eden, place **JBL Speaker** (Props). The scroll menu has Play, Stop, Next track, Previous track and Change range.

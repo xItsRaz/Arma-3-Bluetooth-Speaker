@@ -1,0 +1,35 @@
+#include "..\script_component.hpp"
+/*
+ * Author: Raz
+ * Server-side entry point for every speaker command. Clients send:
+ *   [QEGVAR(common,command), [_speaker, _player, _command, _args]] call CBA_fnc_serverEvent
+ *
+ * Arguments:
+ * 0: Speaker <OBJECT>
+ * 1: Player who sent it <OBJECT>
+ * 2: Command <STRING> ("play", "stop", "next", "prev", "range")
+ * 3: Command arguments <ANY> (default: [])
+ *
+ * Return Value:
+ * None
+ */
+
+params [["_speaker", objNull, [objNull]], ["_player", objNull, [objNull]], ["_command", "", [""]], ["_args", []]];
+TRACE_4("command",_speaker,_player,_command,_args);
+
+if (!isServer || {isNull _speaker}) exitWith {};
+
+// Session 2: permission check (owner / admin) goes here - see PLAN.md section 5
+
+switch (_command) do {
+    case "play";
+    case "stop";
+    case "next";
+    case "prev";
+    case "range": {
+        [_speaker, _command, _args] call EFUNC(audio,command);
+    };
+    default {
+        WARNING_1("Unknown command: %1",_command);
+    };
+};

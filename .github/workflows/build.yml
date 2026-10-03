@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup HEMTT
+        uses: arma-actions/hemtt@v1
+
+      - name: Check
+        run: hemtt check
+
+      - name: Release build
+        run: hemtt release
+
+      - name: Show output
+        if: always()
+        run: ls -R .hemttout/release releases 2>/dev/null || true
+
+      # Download this artifact, unzip it into a folder named @JBLSpeaker, load it as a local mod
+      - name: Upload mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: JBLSpeaker
+          path: .hemttout/release/
+          if-no-files-found: error

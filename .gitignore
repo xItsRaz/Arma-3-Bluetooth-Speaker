@@ -1,9 +1,11 @@
 # Music is copyrighted - keep it local, never push it
-jbl_speaker/sounds/*.ogg
-jbl_speaker/sounds/*.mp3
-jbl_speaker/sounds/*.wav
+addons/audio/sounds/*.ogg
+addons/audio/sounds/*.mp3
+addons/audio/sounds/*.wav
 
 # Build output
+.hemttout/
+releases/
 @JBLSpeaker/
 *.pbo
 *.bisign
