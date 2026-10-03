@@ -10,6 +10,7 @@ releases/
 *.pbo
 *.bisign
 *.biprivatekey
+.hemttprivatekey
 extension/target/
 
 .DS_Store
