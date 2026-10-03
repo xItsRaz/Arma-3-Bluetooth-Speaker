@@ -2,7 +2,8 @@
 /*
  * Author: Raz
  * Server only. Owns the playback state and tells every client what to play.
- * Called by jbl_common_fnc_command after validation.
+ * Called by jbl_common_fnc_command after validation. For a PartyBoost group this is the leader;
+ * every follower gets the same state.
  *
  * Arguments:
  * 0: Speaker <OBJECT>
@@ -23,13 +24,21 @@ if (_count == 0) exitWith {
 
 private _index = (_speaker getVariable [VAR_TRACK, 0]) min (_count - 1);
 
+// Send the state to every player, for this speaker and its PartyBoost followers
 private _broadcast = {
     private _state = [
         _speaker getVariable [VAR_PLAYING, false],
         _speaker getVariable [VAR_TRACK, 0],
         _speaker getVariable [VAR_START, 0]
     ];
-    [QGVAR(sync), [_speaker, _state]] call CBA_fnc_globalEvent;
+    {
+        if (_x != _speaker) then {
+            _x setVariable [VAR_PLAYING, _state select 0, true];
+            _x setVariable [VAR_TRACK, _state select 1, true];
+            _x setVariable [VAR_START, _state select 2, true];
+        };
+        [QGVAR(sync), [_x, _state]] call CBA_fnc_globalEvent;
+    } forEach ([_speaker] + ((_speaker getVariable [VAR_FOLLOWERS, []]) select {!isNull _x}));
 };
 
 // A new session id invalidates any pending auto-advance timer

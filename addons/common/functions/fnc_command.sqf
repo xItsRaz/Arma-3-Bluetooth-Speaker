@@ -7,7 +7,7 @@
  * Arguments:
  * 0: Speaker <OBJECT>
  * 1: Player who sent it <OBJECT>
- * 2: Command <STRING> ("play", "stop", "next", "prev")
+ * 2: Command <STRING> ("play", "stop", "next", "prev", "link", "unlink")
  * 3: Command arguments <ANY> (default: [])
  *
  * Return Value:
@@ -26,7 +26,16 @@ switch (_command) do {
     case "stop";
     case "next";
     case "prev": {
+        // A linked speaker controls its whole PartyBoost group through the leader
+        private _leader = _speaker getVariable [VAR_LEADER, objNull];
+        if (!isNull _leader) then { _speaker = _leader; };
         [_speaker, _command, _args] call EFUNC(audio,command);
+    };
+    case "link": {
+        [_speaker, _player] call EFUNC(audio,link);
+    };
+    case "unlink": {
+        [_speaker, _player] call EFUNC(audio,unlink);
     };
     default {
         WARNING_1("Unknown command: %1",_command);

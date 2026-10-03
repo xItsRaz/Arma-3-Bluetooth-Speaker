@@ -21,5 +21,11 @@
 #define VAR_SESSION "jbl_session"
 #define VAR_SOURCE  "jbl_soundSource"
 
+// PartyBoost: followers point at their leader; the leader lists its followers
+#define VAR_LEADER    "jbl_linkLeader"
+#define VAR_FOLLOWERS "jbl_linkFollowers"
+#define LINK_RADIUS   15
+#define LINK_MAX      8
+
 // Synced clock: serverTime in MP, time in SP
 #define NOW ([time, serverTime] select isMultiplayer)

@@ -1,1 +1,2 @@
 PREP(command);
+PREP(notify);
