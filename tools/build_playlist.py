@@ -48,7 +48,7 @@ def main():
     if not files:
         sys.exit(f"No .ogg files in {SOUNDS}")
 
-    sounds, tracks, titles, durations = [], [], [], []
+    sounds, tracks, titles, durations, names_out = [], [], [], [], []
     for i, f in enumerate(files):
         try:
             duration = vorbis_duration(f)
@@ -69,6 +69,7 @@ def main():
         tracks.append(f'"{cls}"')
         titles.append(f'"{title}"')
         durations.append(f"{duration:.2f}")
+        names_out.append(f'"{esc(f.name)}"')  # the extension plays these from <mod>/music/
         shown = names.get(f.name, f.stem)
         warn = "  <- not English, shows blank in Arma: edit titles.json" if re.search(r"[^\x00-\x7f]", shown) else ""
         print(f"{duration:7.1f}s  {shown}{warn}")
@@ -80,6 +81,7 @@ def main():
         f"    tracks[] = {{{', '.join(tracks)}}};\n"
         f"    titles[] = {{{', '.join(titles)}}};\n"
         f"    durations[] = {{{', '.join(durations)}}};\n"
+        f"    files[] = {{{', '.join(names_out)}}};\n"
         "};\n",
         encoding="utf-8",
     )

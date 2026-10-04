@@ -33,4 +33,6 @@ if (_members isEqualTo []) then {
         _x setVariable [VAR_VOLUME, _state select 3, true];
     };
     [QGVAR(sync), [_x, _state]] call CBA_fnc_globalEvent;
+    // The battery drains at a different speed now
+    ["jbl_battery_rebase", [_x]] call CBA_fnc_localEvent;
 } forEach _members;

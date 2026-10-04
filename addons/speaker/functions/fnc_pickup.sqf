@@ -29,11 +29,11 @@ if !(_player canAdd [MAG_SPEAKER, 1]) exitWith {
     [_player, "No room in your inventory. Carry it instead."] call EFUNC(common,notify);
 };
 
-private _battery = _speaker getVariable [VAR_BATTERY, 100];
+// The battery is frozen into the magazine rounds
+private _battery = [_speaker] call EFUNC(battery,get);
 
 // Stop the music everywhere, then remove the object
-[_speaker] call EFUNC(audio,unlink);
-if (_speaker getVariable [VAR_PLAYING, false]) then { [_speaker, "stop"] call EFUNC(audio,command); };
+[_speaker] call EFUNC(audio,halt);
 
 private _unit = _speaker getVariable [VAR_CLIPPED_TO, objNull];
 if (!isNull _unit) then { _unit setVariable [VAR_CLIPPED, objNull, true]; };

@@ -7,6 +7,7 @@
  * Arguments:
  * 0: Speaker <OBJECT>
  * 1: State [playing, trackIndex, startTime, volume] <ARRAY> (default: [] = read from the object)
+ * 2: Built-in sound only: skip the sound extension, e.g. after it could not play a file <BOOL> (default: false)
  *
  * Range and loudness are fixed per speaker type, from its config:
  *   jbl_rangeSetting (CBA setting with the range), jbl_range (fallback, metres),
@@ -16,7 +17,7 @@
  * None
  */
 
-params [["_speaker", objNull, [objNull]], ["_state", [], [[]]]];
+params [["_speaker", objNull, [objNull]], ["_state", [], [[]]], ["_builtin", false]];
 
 if (!hasInterface || {isNull _speaker}) exitWith {};
 
@@ -30,6 +31,7 @@ if (_state isEqualTo []) then {
 };
 _state params ["_playing", "_index", "_start", ["_volume", VOLUME_DEFAULT]];
 
+[_speaker] call FUNC(extStop);
 private _source = _speaker getVariable [VAR_SOURCE, objNull];
 if (!isNull _source) then { deleteVehicle _source; };
 _speaker setVariable [VAR_SOURCE, objNull];
@@ -53,8 +55,13 @@ private _level = (_volume - GVAR(personalVolume)) max 1 min VOLUME_MAX;
 private _soundClass = format ["%1_v%2%3", _tracks select _index, _level, getText (_type >> "jbl_soundSuffix")];
 if (!isClass (configFile >> "CfgSounds" >> _soundClass)) then { _soundClass = _tracks select _index; };
 
-_source = _speaker say3D [_soundClass, _range, 1, false, _offset];
-_speaker setVariable [VAR_SOURCE, _source];
+private _pitch = [1, 0.95] select (_speaker getVariable [VAR_DAMAGED, false]);
+// Through the extension when it is there (it has no per-type sound classes: the gain comes from the level)
+private _extension = !_builtin && {[_speaker, _index, _offset, _level] call FUNC(extPlay)};
+if (!_extension) then {
+    _source = _speaker say3D [_soundClass, _range, _pitch, false, _offset];
+    _speaker setVariable [VAR_SOURCE, _source];
+};
 
 if (EGVAR(common,notifications) > 0 && {player distance _speaker < _range}) then {
     private _message = format ["JBL: now playing %1", _titles select _index];

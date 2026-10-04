@@ -21,6 +21,13 @@ One-time setup on the Mac: `brew install openssl@3 ffmpeg vorbis-tools` (HEMTT i
 3. Run `~/.local/bin/hemtt release`. The finished mod is zipped at `releases/jbl-latest.zip` (it contains an `@jbl` folder).
 4. Copy the zip to the Windows PC, unzip it, and load `@jbl` as a local mod together with CBA_A3.
 
+## Build on Windows
+`powershell -File tools\make_mod.ps1` builds everything into `.hemttoutuild\@JBLSpeaker` (hidden folder): the addons, the sound extension `jbl_speaker_x64.dll`, and your converted songs in `music\`. Add `-Music` to convert the songs in `music/` first. Load that folder with CBA_A3 and ACE3.
+
+One-time setup: Python 3 and ffmpeg (`winget install Python.Python.3.12 Gyan.FFmpeg`), HEMTT (download `windows-x64.zip` from its GitHub releases), and for the extension Rust (`rustup`, GNU toolchain) plus MinGW (`winget install BrechtSanders.WinLibs.POSIX.UCRT`).
+
+**The sound extension** gives smoother volume, quieter speakers behind walls, echo indoors and sound that finds open doors. It needs the game to run **without BattlEye** (the Arma launcher has a start option for that). Without the DLL, or with it blocked, everything still works with Arma's built-in sound. Check the `.rpt` for "JBL Speaker: sound extension active".
+
 ## Build tools
 - [HEMTT](https://hemtt.dev/): `hemtt check` (lint), `hemtt build` (dev build), `hemtt release` (zip + signing).
 - `include/x/cba/` holds CBA's macro headers, used by every `script_component.hpp`.

@@ -11,6 +11,8 @@
  * 2: Command <STRING>
  *    Playback: "play", "stop", "next", "prev", "track" (args: index), "volume" (args: 1-5)
  *    PartyBoost: "link", "unlink"
+ *    Mounting: "mount", "mountPos", "unmount", "nudge" (see jbl_speaker_fnc_mountCommand)
+ *    Battery: "plug", "unplug", "bank" (args: power bank rounds)
  *    Inventory: "pickup" (stops the music), "clip" (pick up onto your backpack, keeps playing)
  *    Ownership: "claim", "lock", "unlock", "release"
  * 3: Command arguments <ANY> (default: [])
@@ -49,6 +51,10 @@ switch (_command) do {
         private _target = _speaker getVariable [VAR_LEADER, objNull];
         if (isNull _target) then { _target = _speaker; };
         if !([_target, _player] call FUNC(canControl)) exitWith { [_target] call _deny; };
+        // An empty battery can't start music (stop and volume still work)
+        if (_command in ["play", "next", "prev", "track"] && {_target getVariable [VAR_DEAD, false]}) exitWith {
+            [_player, "The battery is empty"] call FUNC(notify);
+        };
         [_target, _command, _args] call EFUNC(audio,command);
     };
 
@@ -58,9 +64,28 @@ switch (_command) do {
         [_speaker, _player] call ([EFUNC(audio,unlink), EFUNC(audio,link)] select (_command == "link"));
     };
 
+    case "plug";
+    case "unplug";
+    case "bank": {
+        if !([_speaker, _player] call FUNC(canControl)) exitWith { [_speaker] call _deny; };
+        switch (_command) do {
+            case "plug": { [_speaker, _player] call EFUNC(battery,plug); };
+            case "unplug": { [_speaker, _player] call EFUNC(battery,unplug); };
+            default { [_speaker, _player, _args] call EFUNC(battery,applyBank); };
+        };
+    };
+
     case "pickup": {
         if !([_speaker, _player] call FUNC(canControl)) exitWith { [_speaker] call _deny; };
         [_speaker, _player] call EFUNC(speaker,pickup);
+    };
+
+    case "mount";
+    case "mountPos";
+    case "unmount";
+    case "nudge": {
+        if !([_speaker, _player] call FUNC(canControl)) exitWith { [_speaker] call _deny; };
+        [_speaker, _player, _command, _args] call EFUNC(speaker,mountCommand);
     };
 
     case "clip": {

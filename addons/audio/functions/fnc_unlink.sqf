@@ -19,6 +19,7 @@ private _stop = {
     _member setVariable [VAR_LEADER, objNull, true];
     _member setVariable [VAR_PLAYING, false, true];
     [QGVAR(sync), [_member, [false, 0, 0, VOLUME_DEFAULT]]] call CBA_fnc_globalEvent;
+    ["jbl_battery_rebase", [_member]] call CBA_fnc_localEvent;
 };
 
 private _leader = _speaker getVariable [VAR_LEADER, objNull];

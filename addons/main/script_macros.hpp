@@ -40,7 +40,16 @@
 
 // Inventory form (PLAN.md section 9): a magazine whose rounds are battery % + 1
 #define MAG_SPEAKER   "jbl_speaker_mag"
-#define VAR_BATTERY   "jbl_batteryPct"
 // Backpack clip: the unit points at its speaker, the speaker at its unit
 #define VAR_CLIPPED    "jbl_clippedSpeaker"
 #define VAR_CLIPPED_TO "jbl_clippedTo"
+
+// Battery (PLAN.md section 10): [chargeAtT 0-1, T, ratePerSecond]; current = c + rate * (NOW - T)
+#define VAR_BAT      "jbl_bat"
+#define VAR_DEAD     "jbl_dead"
+#define VAR_LOW      "jbl_low"
+#define VAR_CHARGING "jbl_charging"
+
+// Damage (PLAN.md section 12)
+#define VAR_DAMAGED "jbl_damaged"
+#define VAR_BROKEN  "jbl_broken"

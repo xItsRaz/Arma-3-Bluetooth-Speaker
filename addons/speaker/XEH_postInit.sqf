@@ -5,13 +5,15 @@ if (isServer) then {
     ["ace_cargoLoaded", {
         params ["_item"];
         if !(_item isKindOf "jbl_speaker") exitWith {};
-        [_item] call EFUNC(audio,unlink);
-        if (_item getVariable [VAR_PLAYING, false]) then { [_item, "stop"] call EFUNC(audio,command); };
+        [_item] call EFUNC(audio,halt);
     }] call CBA_fnc_addEventHandler;
 
     // Placing from inventory, unclipping, and dropping a clipped speaker on death / disconnect
     [QGVAR(create), LINKFUNC(create)] call CBA_fnc_addEventHandler;
+    // (the smoke effect when a speaker breaks runs on every client, see below)
     [QGVAR(drop), LINKFUNC(drop)] call CBA_fnc_addEventHandler;
+    // A speaker mounted on a vehicle that was destroyed or deleted falls to the ground
+    [{ call FUNC(mountCheck) }, 5] call CBA_fnc_addPerFrameHandler;
     addMissionEventHandler ["HandleDisconnect", {
         params ["_unit"];
         [_unit, 0.5] call FUNC(drop);
@@ -20,6 +22,8 @@ if (isServer) then {
 };
 
 if (!hasInterface) exitWith {};
+
+[QGVAR(brokenFx), LINKFUNC(brokenFx)] call CBA_fnc_addEventHandler;
 
 // The server hands a picked-up speaker to this player as a magazine
 [QGVAR(giveMag), LINKFUNC(giveMag)] call CBA_fnc_addEventHandler;

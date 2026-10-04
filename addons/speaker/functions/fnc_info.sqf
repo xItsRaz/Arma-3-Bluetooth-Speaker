@@ -21,10 +21,18 @@ private _link = "not linked";
 if (_followers > 0) then { _link = format ["main speaker + %1 linked", _followers]; };
 if (!isNull _leader) then { _link = "linked to another speaker"; };
 
-hint format ["JBL Speaker\n\nOwner: %1\nLocked: %2\nPartyBoost: %3\nVolume: %4\nNow playing: %5",
+private _condition = "working";
+if (_target getVariable [VAR_BROKEN, false]) then { _condition = "broken"; } else {
+    if (_target getVariable [VAR_DAMAGED, false]) then { _condition = "damaged"; };
+};
+private _battery = ["off", format ["%1%%", round ([_target] call EFUNC(battery,get))]] select EGVAR(battery,enabled);
+
+hint format ["JBL Speaker\n\nOwner: %1\nLocked: %2\nPartyBoost: %3\nVolume: %4\nNow playing: %5\nBattery: %6\nCondition: %7",
     ["nobody", _owner] select (_owner != ""),
     ["no", "yes"] select (_owner != "" && {_target getVariable [VAR_LOCKED, true]}),
     _link,
     _target getVariable [VAR_VOLUME, VOLUME_DEFAULT],
-    ["nothing", _titles param [_target getVariable [VAR_TRACK, 0], "?"]] select (_target getVariable [VAR_PLAYING, false])
+    ["nothing", _titles param [_target getVariable [VAR_TRACK, 0], "?"]] select (_target getVariable [VAR_PLAYING, false]),
+    _battery,
+    _condition
 ];

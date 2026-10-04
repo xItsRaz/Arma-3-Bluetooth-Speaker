@@ -32,7 +32,7 @@ _speaker setVectorUp _normal;
 _speaker setVariable [VAR_OWNER, getPlayerUID _player, true];
 _speaker setVariable [VAR_OWNER_NAME, name _player, true];
 _speaker setVariable [VAR_LOCKED, true, true];
-_speaker setVariable [VAR_BATTERY, ((_rounds - 1) max 0) min 100, true];
+[_speaker, ((_rounds - 1) max 0) min 100] call EFUNC(battery,set);
 
 if (_clip) then {
     [_speaker, _player] call FUNC(clip);

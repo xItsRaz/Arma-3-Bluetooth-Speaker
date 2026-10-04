@@ -14,6 +14,10 @@
 
 params ["_target"];
 
+// In the self menu the target is the player: use the speaker clipped to them
+if (_target isKindOf "CAManBase") then { _target = _target getVariable [VAR_CLIPPED, objNull]; };
+if (isNull _target) exitWith {[]};
+
 private _titles = getArray (configFile >> QEGVAR(audio,playlist) >> "titles");
 private _current = [-1, _target getVariable [VAR_TRACK, 0]] select (_target getVariable [VAR_PLAYING, false]);
 

@@ -31,3 +31,26 @@ jobs:
           name: JBLSpeaker
           path: .hemttout/release/
           if-no-files-found: error
+
+  # The sound extension (Rust). Put jbl_speaker_x64.dll next to the addons folder of @JBLSpeaker.
+  # Copying your songs to @JBLSpeaker/music is what the DLL plays them from (see README).
+  extension:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: extension
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test
+        run: cargo test --release
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: JBLSpeaker-extension
+          path: extension/target/release/jbl_speaker_x64.dll
+          if-no-files-found: error

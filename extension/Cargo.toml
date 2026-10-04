@@ -1,0 +1,25 @@
+[package]
+name = "jbl_speaker"
+version = "0.1.0"
+edition = "2021"
+description = "Arma 3 extension for the JBL Speaker mod: 3D audio mixer, file/URL playback"
+publish = false
+
+[lib]
+# Arma loads "jbl_speaker_x64.dll" for callExtension "jbl_speaker"
+name = "jbl_speaker_x64"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+arma-rs = "1.13.0"
+cpal = "0.18.2"
+symphonia = { version = "0.6.1", features = ["mp3", "ogg", "vorbis", "flac", "wav", "aac", "isomp4", "pcm", "alac"] }
+# Windows-native TLS (schannel): no C compiler needed to build
+ureq = { version = "3.4.2", default-features = false, features = ["native-tls-no-default"] }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

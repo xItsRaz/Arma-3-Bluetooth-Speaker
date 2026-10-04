@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""Generates the ACE "mounting" menus (they are long and repetitive):
+    addons/speaker/MountMenuTarget.hpp   inside the speaker's own menu (look at the speaker)
+    addons/speaker/MountMenuSelf.hpp     inside the "Backpack speaker" self menu
+
+Run after changing the lists below: python3 tools/gen_mount_menu.py
+"""
+from pathlib import Path
+
+ADDON = Path(__file__).resolve().parent.parent / "addons" / "speaker"
+
+BACKPACK = [("back", "Back"), ("side", "Side (hip)"), ("under", "Under the backpack")]
+VEHICLE = [("roof", "Roof"), ("rear", "Rear"), ("front", "Front / hood")]
+NUDGES = [("x+", "X +"), ("x-", "X -"), ("y+", "Y +"), ("y-", "Y -"), ("z+", "Z +"), ("z-", "Z -"),
+          ("r+", "Turn right"), ("r-", "Turn left")]
+
+SELF_EXCEPTIONS = 'exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};'
+
+# Conditions for the menu on the speaker (_target is the speaker)
+T_CLIPPED = "!isNull (_target getVariable ['jbl_clippedTo', objNull])"
+T_MOUNTED = "!isNull (_target getVariable ['jbl_mountedOn', objNull])"
+T_ATTACHED = f"({T_CLIPPED} || {{{T_MOUNTED}}})"
+T_CAN_BODY = ("isNull (_player getVariable ['jbl_clippedSpeaker', objNull]) || "
+              "{(_player getVariable ['jbl_clippedSpeaker', objNull]) == _target}")
+T_BODY_OK = f"({T_CAN_BODY}) && {{backpack _player != '' || {{_target isKindOf 'jbl_partybox'}}}}"
+
+# Conditions for the self menu (the speaker is the one clipped to the player)
+S_SPEAKER = "(_player getVariable ['jbl_clippedSpeaker', objNull])"
+
+
+def action(indent, name, label, condition, statement, children="", extra="", modifier=""):
+    pad = " " * indent
+    lines = [
+        f"{pad}class GVAR({name}) {{",
+        f'{pad}    displayName = "{label}";',
+        f'{pad}    condition = "{condition}";',
+        f'{pad}    statement = "{statement}";',
+    ]
+    if modifier:
+        lines.append(f"{pad}    {modifier}")
+    if extra:
+        lines.append(f"{pad}    {extra}")
+    if children:
+        lines.append(children)
+    lines.append(f"{pad}}};")
+    return "\n".join(lines)
+
+
+def target_menu():
+    i = 20
+    out = []
+
+    def presets(prefix, items, kind, command):
+        children = []
+        for key, label in items:
+            args = f"['{kind}', '{key}']" if command == "mount" else f"['{key}']"
+            children.append(action(i + 8, f"{prefix}_{key}", label, "true",
+                                   f"[_target, _player, '{command}', {args}] call jbl_speaker_fnc_send"))
+        return "\n".join(children)
+
+    nudges = "\n".join(action(i + 8, f"nudge_{k.replace('+', 'p').replace('-', 'm')}", label, "true",
+                              f"[_target, _player, 'nudge', ['{k}']] call jbl_speaker_fnc_send")
+                       for k, label in NUDGES)
+    out.append(action(i, "mount", "Mount", "[_target, _player] call jbl_common_fnc_canControl", "", children="\n".join([
+        action(i + 4, "mtBackpack", "On my body", T_BODY_OK, "", children=presets("mtb", BACKPACK, "backpack", "mount")),
+        action(i + 4, "mtVehicle", "On a vehicle (within 6 m)", f"!({T_CLIPPED})", "", children=presets("mtv", VEHICLE, "vehicle", "mount")),
+        action(i + 4, "mtPosBody", "Move on my body", T_CLIPPED, "", children=presets("mtpb", BACKPACK, "backpack", "mountPos")),
+        action(i + 4, "mtPosVehicle", "Move on the vehicle", T_MOUNTED, "", children=presets("mtpv", VEHICLE, "vehicle", "mountPos")),
+        action(i + 4, "mtAdjust", "Adjust position", T_ATTACHED, "", children=nudges),
+        action(i + 4, "mtTakeOff", "Take off and put down", T_ATTACHED,
+               "[_target, _player, 'unmount'] call jbl_speaker_fnc_send"),
+    ])))
+    return "\n".join(out) + "\n"
+
+
+def self_menu():
+    i = 16
+
+    def presets(prefix, items, kind, command):
+        children = []
+        for key, label in items:
+            args = f"['{kind}', '{key}']" if command == "mount" else f"['{key}']"
+            children.append(action(i + 8, f"{prefix}_{key}", label, "true",
+                                   f"[_player, '{command}', {args}] call jbl_speaker_fnc_clipped", extra=SELF_EXCEPTIONS))
+        return "\n".join(children)
+
+    nudges = "\n".join(action(i + 8, f"snudge_{k.replace('+', 'p').replace('-', 'm')}", label, "true",
+                              f"[_player, 'nudge', ['{k}']] call jbl_speaker_fnc_clipped", extra=SELF_EXCEPTIONS)
+                       for k, label in NUDGES)
+    parts = [
+        action(i, "cmPosition", "Position on my body", "true", "", children=presets("cmp", BACKPACK, "backpack", "mountPos"), extra=SELF_EXCEPTIONS),
+        action(i, "cmVehicle", "Mount on a vehicle (within 6 m)", "true", "", children=presets("cmv", VEHICLE, "vehicle", "mount"), extra=SELF_EXCEPTIONS),
+        action(i, "cmAdjust", "Adjust position", "true", "", children=nudges, extra=SELF_EXCEPTIONS),
+    ]
+    return "\n".join(parts) + "\n"
+
+
+def main():
+    header = "// Generated by tools/gen_mount_menu.py - do not edit by hand\n"
+    (ADDON / "MountMenuTarget.hpp").write_text(header + target_menu(), encoding="utf-8")
+    (ADDON / "MountMenuSelf.hpp").write_text(header + self_menu(), encoding="utf-8")
+    print("Wrote MountMenuTarget.hpp and MountMenuSelf.hpp")
+
+
+if __name__ == "__main__":
+    main()

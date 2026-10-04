@@ -15,6 +15,7 @@
 params [["_speaker", objNull, [objNull]], ["_player", objNull, [objNull]]];
 
 if (isNull _speaker || {isNull _player}) exitWith {false};
+if (_speaker getVariable ["jbl_broken", false]) exitWith {false};
 if ([_player] call FUNC(isAdmin)) exitWith {true};
 if (GVAR(controlMode) == 1) exitWith {true};
 

@@ -1,5 +1,13 @@
 PREP(broadcast);
 PREP(command);
+PREP(extEvent);
+PREP(extInit);
+PREP(extPlay);
+PREP(extStop);
+PREP(extTick);
+PREP(extUpdate);
+PREP(extLevel);
+PREP(halt);
 PREP(link);
 PREP(unlink);
 PREP(scheduleNext);
