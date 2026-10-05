@@ -27,7 +27,7 @@ if (_parent isKindOf "CAManBase") exitWith {
     // (the Party Speaker only has "back": anything else falls back to the first entry)
     private _table = [
         [["back", [-0.15, -0.15, 0], 0], ["side", [0.22, -0.05, -0.15], 90], ["under", [-0.10, -0.18, -0.38], 0]],
-        [["back", [-0.25, -0.32, 0], 0]]
+        [["back", [0, -0.32, 0], -90]] // tuned in game 2026-10-05 with "Adjust position"
     ] select _party;
     private _entry = _table select ((_table findIf {(_x select 0) == _preset}) max 0);
     [_entry select 1, _entry select 2, "spine3"]
