@@ -7,6 +7,7 @@
 //!   play id file offset gain range x y z  -> start a track (async; answers come back as callbacks)
 //!   voice id x y z gain range muffle reverb extra
 //!                                         -> move / re-tune a playing voice (a few times a second)
+//!   room size                             -> the size of the room you are in, in metres (shapes the echo)
 //!   stop id | stop_all | master v | level id | playing
 //!
 //! Callbacks (the ExtensionCallback event, name "jbl_speaker"): function "started" | "ended" |
@@ -37,6 +38,7 @@ const CACHE_TRACKS: usize = 6;
 
 #[arma]
 fn init() -> Extension {
+    paths::pin_module();
     Extension::build()
         .version(env!("CARGO_PKG_VERSION").to_string())
         .command("init", cmd_init)
@@ -45,6 +47,7 @@ fn init() -> Extension {
         .command("voice", cmd_voice)
         .command("stop", cmd_stop)
         .command("stop_all", cmd_stop_all)
+        .command("room", cmd_room)
         .command("master", cmd_master)
         .command("level", cmd_level)
         .command("playing", cmd_playing)
@@ -142,6 +145,16 @@ fn cmd_stop_all() -> String {
         e.mixer().stop_all();
     }
     "ok".into()
+}
+
+fn cmd_room(size: f32) -> String {
+    match engine::engine() {
+        Ok(e) => {
+            e.mixer().set_room(size);
+            "ok".into()
+        }
+        Err(e) => format!("error:{e}"),
+    }
 }
 
 fn cmd_master(volume: f32) -> String {
@@ -274,6 +287,30 @@ mod paths {
     pub fn mod_folder() -> Option<PathBuf> {
         None
     }
+
+    /// Keeps this DLL loaded until the process ends. Our background threads (audio stream,
+    /// callbacks) keep running while Arma shuts down; if Arma unloaded the DLL first they would
+    /// run code that is gone, which crashed the game on exit (access violation).
+    #[cfg(windows)]
+    pub fn pin_module() {
+        use std::ffi::c_void;
+
+        #[link(name = "kernel32")]
+        extern "system" {
+            fn GetModuleHandleExW(flags: u32, address: *const c_void, module: *mut *mut c_void) -> i32;
+        }
+        const PIN: u32 = 0x1;
+        const FROM_ADDRESS: u32 = 0x4;
+
+        let mut module: *mut c_void = std::ptr::null_mut();
+        // SAFETY: plain Win32 call with a valid pointer; the address belongs to this module
+        unsafe {
+            GetModuleHandleExW(PIN | FROM_ADDRESS, pin_module as *const c_void, &mut module);
+        }
+    }
+
+    #[cfg(not(windows))]
+    pub fn pin_module() {}
 }
 
 #[cfg(test)]

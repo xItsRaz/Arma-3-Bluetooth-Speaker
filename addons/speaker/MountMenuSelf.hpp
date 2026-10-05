@@ -12,13 +12,13 @@
                         };
                         class GVAR(cmp_side) {
                             displayName = "Side (hip)";
-                            condition = "true";
+                            condition = "!((_player getVariable ['jbl_clippedSpeaker', objNull]) isKindOf 'jbl_partybox')";
                             statement = "[_player, 'mountPos', ['side']] call jbl_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(cmp_under) {
                             displayName = "Under the backpack";
-                            condition = "true";
+                            condition = "!((_player getVariable ['jbl_clippedSpeaker', objNull]) isKindOf 'jbl_partybox')";
                             statement = "[_player, 'mountPos', ['under']] call jbl_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };

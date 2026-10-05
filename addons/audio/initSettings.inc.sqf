@@ -50,6 +50,23 @@
 ] call CBA_fnc_addSetting;
 
 [
+    QGVAR(extLoudness), "SLIDER",
+    ["Speaker loudness (sound extension)", "How loud speakers are for you when played through the sound extension. Other players are not affected."],
+    ["JBL Speaker", "Sound"],
+    [10, 100, 100, 0],
+    0,
+    { call FUNC(resyncAll) }
+] call CBA_fnc_addSetting;
+
+[
+    QGVAR(debug), "CHECKBOX",
+    ["Sound debug readout", "Shows what the sound extension is doing for the nearest speaker: walls, glass, open path, muffling, volume and echo."],
+    ["JBL Speaker", "Sound"],
+    false,
+    0
+] call CBA_fnc_addSetting;
+
+[
     QGVAR(muteAll), "CHECKBOX",
     ["Mute all speakers (only for you)", "You hear no speakers at all. Other players are not affected."],
     ["JBL Speaker", "Personal"],

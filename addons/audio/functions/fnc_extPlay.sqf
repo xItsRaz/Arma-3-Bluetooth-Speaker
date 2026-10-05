@@ -23,7 +23,7 @@ if (_file == "") exitWith {false};
 private _type = configOf _speaker;
 private _range = (missionNamespace getVariable [getText (_type >> "jbl_rangeSetting"), getNumber (_type >> "jbl_range")]) max 1;
 // Level 1-5 -> 0.2 .. 1, scaled by the speaker type's loudness
-private _gain = (0.2 * _level) * getNumber (_type >> "jbl_extensionGain");
+private _gain = (0.2 * _level) * getNumber (_type >> "jbl_extensionGain") * (GVAR(extLoudness) / 100);
 _speaker setVariable ["jbl_extGain", _gain];
 
 private _position = getPosASL _speaker;

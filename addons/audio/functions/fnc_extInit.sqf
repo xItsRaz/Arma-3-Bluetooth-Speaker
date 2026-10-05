@@ -15,6 +15,9 @@
 GVAR(extReady) = false;
 GVAR(extVoices) = [];
 GVAR(extIndex) = 0;
+GVAR(extIndoor) = false;  // are you under a roof (set from the room measurement)
+GVAR(extRoomTick) = 0;
+GVAR(extRoomSent) = -100; // last room size sent to the extension
 
 // "" means the extension is not installed (or was blocked, e.g. by BattlEye)
 // (the array form: this extension only answers calls made as [command, [args]])

@@ -99,23 +99,38 @@ pub fn targets(listener: &Listener, p: &VoiceParams) -> Targets {
     // Far away sounds lose their highs, walls take most of them
     let distance_fraction = (distance / range).clamp(0.0, 1.0);
     let open_cutoff = 18000.0 - 14000.0 * distance_fraction;
-    let cutoff = open_cutoff + (450.0 - open_cutoff) * p.muffle.clamp(0.0, 1.0);
+    // Logarithmic between "open" and 450 Hz: 0.4 is a glass pane (~4 kHz), 0.9 a wall (~700 Hz)
+    let cutoff = open_cutoff * (450.0 / open_cutoff).powf(p.muffle.clamp(0.0, 1.0));
 
     Targets { left: gain * angle.cos(), right: gain * angle.sin(), cutoff, send: p.reverb.clamp(0.0, 1.0) * gain }
 }
 
-/// Freeverb-style reverb: 4 damped comb filters and 2 all-pass filters per channel.
+/// The reverb. Three parts, all shaped by the size of the room (set from the game):
+///  - early reflections: a few taps off a short history (the first bounces off the walls),
+///  - a Freeverb-style tail (4 damped combs and 2 all-passes per channel) after a pre-delay,
+///  - in big rooms a slap echo: one clear repeat that returns after the sound crossed the room.
 struct Reverb {
+    sample_rate: u32,
     combs_left: Vec<Comb>,
     combs_right: Vec<Comb>,
     allpass_left: Vec<AllPass>,
     allpass_right: Vec<AllPass>,
+    history: Vec<f32>,
+    echo: Vec<f32>,
+    write: usize,
+    predelay: usize,
+    taps_left: [(usize, f32); 4],
+    taps_right: [(usize, f32); 4],
+    echo_delay: usize,
+    echo_gain: f32,
+    room: f32,
 }
 
 struct Comb {
     buffer: Vec<f32>,
     index: usize,
     filter: f32,
+    feedback: f32,
 }
 
 struct AllPass {
@@ -123,17 +138,21 @@ struct AllPass {
     index: usize,
 }
 
+/// The sound travels about this far per second (m/s).
+const SPEED_OF_SOUND: f32 = 343.0;
+/// Longest delay the reverb keeps (seconds).
+const HISTORY_SECONDS: f32 = 0.8;
+
 impl Comb {
     fn new(size: usize) -> Self {
-        Self { buffer: vec![0.0; size.max(1)], index: 0, filter: 0.0 }
+        Self { buffer: vec![0.0; size.max(1)], index: 0, filter: 0.0, feedback: 0.84 }
     }
 
     fn process(&mut self, input: f32) -> f32 {
-        const FEEDBACK: f32 = 0.84;
         const DAMPING: f32 = 0.25;
         let out = self.buffer[self.index];
         self.filter = out * (1.0 - DAMPING) + self.filter * DAMPING;
-        self.buffer[self.index] = input + self.filter * FEEDBACK;
+        self.buffer[self.index] = input + self.filter * self.feedback;
         self.index = (self.index + 1) % self.buffer.len();
         out
     }
@@ -160,24 +179,92 @@ impl Reverb {
         const COMBS: [usize; 4] = [1116, 1188, 1277, 1356];
         const ALLPASS: [usize; 2] = [556, 441];
         const SPREAD: usize = 23; // makes the right channel different from the left
-        Self {
+        let length = (HISTORY_SECONDS * sample_rate as f32) as usize;
+        let mut reverb = Self {
+            sample_rate,
             combs_left: COMBS.iter().map(|&n| Comb::new(size(n))).collect(),
             combs_right: COMBS.iter().map(|&n| Comb::new(size(n + SPREAD))).collect(),
             allpass_left: ALLPASS.iter().map(|&n| AllPass::new(size(n))).collect(),
             allpass_right: ALLPASS.iter().map(|&n| AllPass::new(size(n + SPREAD))).collect(),
+            history: vec![0.0; length],
+            echo: vec![0.0; length],
+            write: 0,
+            predelay: 0,
+            taps_left: [(0, 0.0); 4],
+            taps_right: [(0, 0.0); 4],
+            echo_delay: 1,
+            echo_gain: 0.0,
+            room: 0.0,
+        };
+        reverb.set_room(8.0);
+        reverb
+    }
+
+    /// Room size in metres (roughly the distance across the room you are in).
+    fn set_room(&mut self, size: f32) {
+        let size = size.clamp(1.5, 60.0);
+        // Ignore small changes: moving the delays makes a faint click
+        if self.room > 0.0 && (size / self.room - 1.0).abs() < 0.15 {
+            return;
         }
+        self.room = size;
+        let rate = self.sample_rate as f32;
+        let max = self.history.len() - 1;
+        let samples = |seconds: f32| ((seconds * rate) as usize).clamp(1, max);
+
+        let big = ((size - 2.0) / 38.0).clamp(0.0, 1.0);
+        for comb in self.combs_left.iter_mut().chain(self.combs_right.iter_mut()) {
+            comb.feedback = 0.70 + 0.20 * big; // bigger rooms ring longer
+        }
+        self.predelay = samples(0.004 + 0.035 * big);
+
+        // First bounces: the sound goes to a wall and comes back
+        let t = size / SPEED_OF_SOUND;
+        self.taps_left = [
+            (samples(t * 0.7), 0.50),
+            (samples(t * 1.1), 0.40),
+            (samples(t * 1.6), 0.30),
+            (samples(t * 2.3), 0.22),
+        ];
+        self.taps_right = [
+            (samples(t * 0.9), 0.50),
+            (samples(t * 1.3), 0.38),
+            (samples(t * 1.9), 0.28),
+            (samples(t * 2.7), 0.20),
+        ];
+
+        // One clear echo in rooms big enough to have one (a hall, a warehouse)
+        self.echo_delay = samples((2.0 * size / SPEED_OF_SOUND).clamp(0.04, 0.6));
+        self.echo_gain = ((size - 6.0) / 20.0).clamp(0.0, 1.0) * 0.5;
     }
 
     fn process(&mut self, input: f32) -> (f32, f32) {
-        let mut left: f32 = self.combs_left.iter_mut().map(|c| c.process(input)).sum();
-        let mut right: f32 = self.combs_right.iter_mut().map(|c| c.process(input)).sum();
+        let length = self.history.len();
+        let read = |buffer: &[f32], write: usize, delay: usize| buffer[(write + length - delay) % length];
+
+        self.history[self.write] = input;
+        let early_left: f32 = self.taps_left.iter().map(|&(d, g)| g * read(&self.history, self.write, d)).sum();
+        let early_right: f32 = self.taps_right.iter().map(|&(d, g)| g * read(&self.history, self.write, d)).sum();
+        let late_input = read(&self.history, self.write, self.predelay.max(1));
+
+        let mut left: f32 = self.combs_left.iter_mut().map(|c| c.process(late_input)).sum();
+        let mut right: f32 = self.combs_right.iter_mut().map(|c| c.process(late_input)).sum();
         for a in &mut self.allpass_left {
             left = a.process(left);
         }
         for a in &mut self.allpass_right {
             right = a.process(right);
         }
-        (left * 0.25, right * 0.25)
+
+        // Slap echo: repeats itself a few times, getting quieter
+        let echoed = read(&self.echo, self.write, self.echo_delay);
+        self.echo[self.write] = input + echoed * 0.45;
+
+        self.write = (self.write + 1) % length;
+        (
+            left * 0.25 + early_left * 0.35 + echoed * self.echo_gain,
+            right * 0.25 + early_right * 0.35 + echoed * self.echo_gain * 0.85,
+        )
     }
 }
 
@@ -204,6 +291,11 @@ impl Mixer {
 
     pub fn set_listener(&mut self, listener: Listener) {
         self.listener = listener;
+    }
+
+    /// Size of the room the listener is in, in metres (shapes the reverb).
+    pub fn set_room(&mut self, size: f32) {
+        self.reverb.set_room(size);
     }
 
     /// Starts (or restarts) a voice. `start_frame` is where in the track to begin.
@@ -442,6 +534,36 @@ mod tests {
             rms(&after, 0)
         };
         assert!(tail(wet_params) > tail(dry_params) + 0.001);
+    }
+
+    #[test]
+    fn bigger_rooms_ring_longer_and_echo() {
+        let rate = 48000;
+        let late = |room: f32| {
+            let mut m = Mixer::new(rate);
+            m.set_room(room);
+            m.play("a", sine(2000, rate, 440.0), 0, VoiceParams { reverb: 1.0, ..at(0.0, 2.0, 75.0) });
+            let mut out = vec![0.0; 4096];
+            m.render(&mut out);
+            // Energy well after the sound ended (0.3-0.5 s)
+            let mut energy = 0.0;
+            for _ in 0..8 {
+                let mut chunk = vec![0.0; 4096];
+                m.render(&mut chunk);
+                energy += chunk.iter().map(|s| s * s).sum::<f32>();
+            }
+            energy
+        };
+        assert!(late(40.0) > late(3.0) * 2.0, "{} vs {}", late(40.0), late(3.0));
+    }
+
+    #[test]
+    fn muffle_curve_is_logarithmic() {
+        let l = Listener::default();
+        let glass = targets(&l, &VoiceParams { muffle: 0.4, ..at(0.0, 5.0, 75.0) });
+        let wall = targets(&l, &VoiceParams { muffle: 0.9, ..at(0.0, 5.0, 75.0) });
+        assert!(glass.cutoff > 2500.0 && glass.cutoff < 6000.0, "{}", glass.cutoff);
+        assert!(wall.cutoff < 900.0, "{}", wall.cutoff);
     }
 
     #[test]

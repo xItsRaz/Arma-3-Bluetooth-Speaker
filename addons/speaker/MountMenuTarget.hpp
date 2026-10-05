@@ -14,12 +14,12 @@
                             };
                             class GVAR(mtb_side) {
                                 displayName = "Side (hip)";
-                                condition = "true";
+                                condition = "!(_target isKindOf 'jbl_partybox')";
                                 statement = "[_target, _player, 'mount', ['backpack', 'side']] call jbl_speaker_fnc_send";
                             };
                             class GVAR(mtb_under) {
                                 displayName = "Under the backpack";
-                                condition = "true";
+                                condition = "!(_target isKindOf 'jbl_partybox')";
                                 statement = "[_target, _player, 'mount', ['backpack', 'under']] call jbl_speaker_fnc_send";
                             };
                         };
@@ -54,12 +54,12 @@
                             };
                             class GVAR(mtpb_side) {
                                 displayName = "Side (hip)";
-                                condition = "true";
+                                condition = "!(_target isKindOf 'jbl_partybox')";
                                 statement = "[_target, _player, 'mountPos', ['side']] call jbl_speaker_fnc_send";
                             };
                             class GVAR(mtpb_under) {
                                 displayName = "Under the backpack";
-                                condition = "true";
+                                condition = "!(_target isKindOf 'jbl_partybox')";
                                 statement = "[_target, _player, 'mountPos', ['under']] call jbl_speaker_fnc_send";
                             };
                         };

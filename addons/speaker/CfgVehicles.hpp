@@ -17,7 +17,7 @@ class CfgVehicles {
         jbl_rangeSetting = "jbl_audio_rangeSpeaker"; // CBA setting with the range
         jbl_range = 75;          // fallback cut-off distance in metres
         jbl_soundSuffix = "";    // normal loudness (the PartyBox will use "_party")
-        jbl_extensionGain = 0.7; // loudness when played through the sound extension (0-1)
+        jbl_extensionGain = 0.45; // loudness when played through the sound extension (0-1)
 
         // ACE carry (small and light: carried in front of the chest, can't be dragged) - tune in game
         ace_dragging_canCarry = 1;
@@ -218,7 +218,7 @@ class CfgVehicles {
         jbl_rangeSetting = "jbl_audio_rangePartybox";
         jbl_range = 200;
         jbl_soundSuffix = "_party";    // ~10 dB louder sound classes
-        jbl_extensionGain = 1;
+        jbl_extensionGain = 0.7;
 
         // Heavy (~11 kg): carried in front with both hands, can also be dragged
         ace_dragging_canCarry = 1;

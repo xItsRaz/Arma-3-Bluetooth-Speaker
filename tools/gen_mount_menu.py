@@ -9,8 +9,9 @@ from pathlib import Path
 
 ADDON = Path(__file__).resolve().parent.parent / "addons" / "speaker"
 
-BACKPACK = [("back", "Back"), ("side", "Side (hip)"), ("under", "Under the backpack")]
-VEHICLE = [("roof", "Roof"), ("rear", "Rear"), ("front", "Front / hood")]
+# (key, label, only for the JBL Speaker): the PartyBox only mounts on the back
+BACKPACK = [("back", "Back", False), ("side", "Side (hip)", True), ("under", "Under the backpack", True)]
+VEHICLE = [("roof", "Roof", False), ("rear", "Rear", False), ("front", "Front / hood", False)]
 NUDGES = [("x+", "X +"), ("x-", "X -"), ("y+", "Y +"), ("y-", "Y -"), ("z+", "Z +"), ("z-", "Z -"),
           ("r+", "Turn right"), ("r-", "Turn left")]
 
@@ -52,9 +53,10 @@ def target_menu():
 
     def presets(prefix, items, kind, command):
         children = []
-        for key, label in items:
+        for key, label, jbl_only in items:
             args = f"['{kind}', '{key}']" if command == "mount" else f"['{key}']"
-            children.append(action(i + 8, f"{prefix}_{key}", label, "true",
+            condition = "!(_target isKindOf 'jbl_partybox')" if jbl_only else "true"
+            children.append(action(i + 8, f"{prefix}_{key}", label, condition,
                                    f"[_target, _player, '{command}', {args}] call jbl_speaker_fnc_send"))
         return "\n".join(children)
 
@@ -78,9 +80,10 @@ def self_menu():
 
     def presets(prefix, items, kind, command):
         children = []
-        for key, label in items:
+        for key, label, jbl_only in items:
             args = f"['{kind}', '{key}']" if command == "mount" else f"['{key}']"
-            children.append(action(i + 8, f"{prefix}_{key}", label, "true",
+            condition = f"!({S_SPEAKER} isKindOf 'jbl_partybox')" if jbl_only else "true"
+            children.append(action(i + 8, f"{prefix}_{key}", label, condition,
                                    f"[_player, '{command}', {args}] call jbl_speaker_fnc_clipped", extra=SELF_EXCEPTIONS))
         return "\n".join(children)
 

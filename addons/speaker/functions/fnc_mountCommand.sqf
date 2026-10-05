@@ -32,6 +32,7 @@ switch (_command) do {
     case "mount": {
         _args params [["_kind", ""], ["_position", ""]];
         if (_kind == "backpack") then {
+            if (_party) then { _position = "back"; }; // the PartyBox only mounts on the back
             if (!_party && {backpack _player == ""}) exitWith { ["You need a backpack for this speaker"] call _tell; };
             private _other = _player getVariable [VAR_CLIPPED, objNull];
             if (!isNull _other && {_other != _speaker}) exitWith { ["You already carry a speaker on your body"] call _tell; };
@@ -50,6 +51,7 @@ switch (_command) do {
     case "mountPos": {
         if (isNull _parent) exitWith {};
         private _position = _args param [0, ""];
+        if (_party && {_parent isKindOf "CAManBase"}) then { _position = "back"; };
         ([_speaker, _parent, _position] call FUNC(mountPreset)) params ["_offset", "_turn", "_bone"];
         [_speaker, _parent, _offset, _turn, _bone, _position] call FUNC(attach);
     };
