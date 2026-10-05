@@ -21,10 +21,9 @@ class CfgVehicles {
         btspk_soundSuffix = "";    // normal loudness (the Party Speaker will use "_party")
         btspk_extensionGain = 0.45; // loudness when played through the sound extension (0-1)
 
-        // ACE carry (small and light: carried in front of the chest, can't be dragged) - tune in game
-        ace_dragging_canCarry = 1;
-        ace_dragging_carryPosition[] = {0, 0.6, 0.9};
-        ace_dragging_carryDirection = 90;
+        // No ACE carry or drag for the small speaker: it goes in the inventory or on a mount instead.
+        // (The Party Speaker below turns carry and drag back on.)
+        ace_dragging_canCarry = 0;
         ace_dragging_canDrag = 0;
         // ACE cargo: fits in any vehicle with cargo space
         ace_cargo_size = 1;
