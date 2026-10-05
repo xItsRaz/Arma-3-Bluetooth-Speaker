@@ -2,6 +2,8 @@
 
 Portable and party speakers that feel real. Carry one, set it down, clip it to your backpack, strap it to a car roof, plug it into a generator, shoot it. Everyone nearby hears the music coming from the speaker, in sync, and the sound reacts to distance, walls, glass and rooms.
 
+> **Work in progress.** This mod is still being built and stays a WIP until the roadmap below is finished. Things will change, move and break between commits.
+>
 > **Status: alpha.** Working and tested in singleplayer on Windows. Multiplayer and dedicated servers are designed for (server-owned state, permission checks on the server) but not tested yet. Expect rough edges. The 3D models are first-pass blockouts with placeholder colours.
 
 Requires **[CBA_A3](https://steamcommunity.com/workshop/filedetails/?id=450814997)** and **[ACE3](https://steamcommunity.com/workshop/filedetails/?id=463939057)**.
