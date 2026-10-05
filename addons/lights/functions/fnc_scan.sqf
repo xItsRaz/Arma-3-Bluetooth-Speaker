@@ -32,7 +32,7 @@ private _have = GVAR(active) apply {_x select 0};
 {
     if !(_x in _have) then {
         private _light = "#lightpoint" createVehicleLocal (getPosATL _x);
-        _light lightAttachObject [_x, [0, 0, 1.2]];
+        _light lightAttachObject [_x, [0, 0, 0.7]];
         _light setLightAttenuation [0.5, 4, 4, 0, 2, 25];
         _light setLightAmbient [0, 0, 0];
         _light setLightBrightness 0;

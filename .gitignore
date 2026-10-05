@@ -20,3 +20,6 @@ extension/target/
 # Your source songs for tools/convert_music.py
 music/
 addons/audio/sounds/titles.json
+
+# Blender preview renders of the models
+tools/blender/preview/

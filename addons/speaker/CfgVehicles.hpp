@@ -14,6 +14,8 @@ class CfgVehicles {
         scope = 2;
         scopeCurator = 2;
         displayName = "JBL Speaker";
+        model = "\z\jbl\addons\speaker\models\jbl_speaker.p3d"; // tools/blender/make_models.py
+        hiddenSelections[] = {"camo", "led_battery", "led_glow", "damage"};
         jbl_rangeSetting = "jbl_audio_rangeSpeaker"; // CBA setting with the range
         jbl_range = 75;          // fallback cut-off distance in metres
         jbl_soundSuffix = "";    // normal loudness (the PartyBox will use "_party")
@@ -215,6 +217,8 @@ class CfgVehicles {
         scope = 2;
         scopeCurator = 2;
         displayName = "JBL PartyBox";
+        model = "\z\jbl\addons\speaker\models\jbl_partybox.p3d"; // tools/blender/make_models.py
+        hiddenSelections[] = {"camo", "ring_left", "ring_right", "strobe", "damage"};
         jbl_rangeSetting = "jbl_audio_rangePartybox";
         jbl_range = 200;
         jbl_soundSuffix = "_party";    // ~10 dB louder sound classes
