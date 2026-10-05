@@ -142,6 +142,10 @@ Next up:
 
 [CBA_A3](https://github.com/CBATeam/CBA_A3) and [ACE3](https://github.com/acemod/ACE3) (required, not included), [HEMTT](https://hemtt.dev/) (build), [arma-rs](https://github.com/BrettMayson/arma-rs), [cpal](https://github.com/RustAudio/cpal), [Symphonia](https://github.com/pdeljanov/Symphonia) and [ureq](https://github.com/algesten/ureq) (sound extension), [Arma 3 Object Builder for Blender](https://github.com/MrClock8163/Arma3ObjectBuilder) (model export).
 
+## License
+
+Copyright (C) 2026 Raz. This project is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version** (GPL-2.0-or-later). It is distributed in the hope that it will be useful, but **without any warranty**. See [LICENSE](LICENSE) for the full text and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the licenses of the libraries it uses. Your own songs are yours and are not covered by this license.
+
 ## Trademarks and disclaimer
 
 JBL is a trademark of HARMAN International Industries, Incorporated, registered in the United States and other countries. Spotify is a registered trademark of Spotify AB. The Bluetooth word mark is a registered trademark owned by Bluetooth SIG, Inc. Arma 3 is a trademark of Bohemia Interactive a.s. All other trademarks are the property of their respective owners.
