@@ -1,17 +1,17 @@
-"""Builds the JBL Speaker (Charge-style) and the JBL PartyBox as Arma 3 models.
+"""Builds the Bluetooth Speaker (portable) and the Bluetooth Party Speaker as Arma 3 models.
 
 Run with Blender 4.4 (the Arma 3 Object Builder addon v2.5.1 enabled):
     blender --background --python tools/blender/make_models.py -- <output folder> [<preview folder>]
 
-Writes jbl_speaker.p3d and jbl_partybox.p3d to the output folder, and (optional) preview PNGs.
+Writes btspk_speaker.p3d and btspk_party.p3d to the output folder, and (optional) preview PNGs.
 Sizes are in metres. Origin at the bottom centre, front facing +Y, Z up.
 
 Parts and named selections (used by hiddenSelections in the config):
-    JBL Speaker : camo (body + end caps), led_battery (5 LEDs), led_glow (rim rings), damage (body)
-    PartyBox    : camo (body), ring_left / ring_right (woofer light rings), strobe, damage
+    Bluetooth Speaker : camo (body + end caps), led_battery (5 LEDs), led_glow (rim rings), damage (body)
+    Party Speaker    : camo (body), ring_left / ring_right (woofer light rings), strobe, damage
 Memory points:
-    JBL Speaker : sound_source, led_light, carry, attach_back
-    PartyBox    : sound_source, light_front, light_top
+    Bluetooth Speaker : sound_source, led_light, carry, attach_back
+    Party Speaker    : sound_source, light_front, light_top
 """
 import math
 import os
@@ -50,13 +50,13 @@ def material(name, rgb, alpha=1.0):
 
 def palette():
     return {
-        "body": material("jbl_body", (0.07, 0.08, 0.10)),        # dark fabric grille
-        "rubber": material("jbl_rubber", (0.02, 0.02, 0.02)),     # end caps, foot, feet
-        "plastic": material("jbl_plastic", (0.12, 0.12, 0.13)),   # panels, buttons
-        "led": material("jbl_led", (0.2, 0.9, 0.3)),               # LEDs
-        "glow": material("jbl_glow", (0.9, 0.9, 1.0)),             # rim / ring lights
-        "speaker": material("jbl_cone", (0.03, 0.03, 0.035)),      # speaker cones
-        "metal": material("jbl_metal", (0.45, 0.45, 0.48)),        # handle, tweeter
+        "body": material("btspk_body", (0.07, 0.08, 0.10)),        # dark fabric grille
+        "rubber": material("btspk_rubber", (0.02, 0.02, 0.02)),     # end caps, foot, feet
+        "plastic": material("btspk_plastic", (0.12, 0.12, 0.13)),   # panels, buttons
+        "led": material("btspk_led", (0.2, 0.9, 0.3)),               # LEDs
+        "glow": material("btspk_glow", (0.9, 0.9, 1.0)),             # rim / ring lights
+        "speaker": material("btspk_cone", (0.03, 0.03, 0.035)),      # speaker cones
+        "metal": material("btspk_metal", (0.45, 0.45, 0.48)),        # handle, tweeter
     }
 
 
@@ -187,13 +187,13 @@ def memory_lod(name, points, collection):
     return obj
 
 
-# ---------------------------------------------------------------- the JBL Speaker (Charge-style)
-LENGTH = 0.223        # JBL Charge 5: 223 x 96.5 x 94 mm
+# ---------------------------------------------------------------- the Bluetooth Speaker (portable)
+LENGTH = 0.223        # A real portable speaker: 223 x 96.5 x 94 mm
 RADIUS = 0.0475
 
 
 def speaker_visual(mats, segments, detail):
-    b = Builder("jbl_speaker", mats)
+    b = Builder("btspk_speaker", mats)
     centre_z = RADIUS
     body_len = 0.187
     cap_len = (LENGTH - body_len) / 2
@@ -210,7 +210,7 @@ def speaker_visual(mats, segments, detail):
     # flat rubber foot so it does not roll
     b.box((0.19, 0.045, 0.012), (0, 0, 0.006), ("camo",), "rubber")
     if detail >= 1:
-        # button strip on top: power, bluetooth, play, minus, plus, PartyBoost
+        # button strip on top: power, bluetooth, play, minus, plus, Party Link
         b.box((0.075, 0.022, 0.004), (0, 0, centre_z + RADIUS + 0.0005), (), "plastic")
         for i in range(6):
             b.cylinder(0.0035, 0.003, (-0.03 + i * 0.012, 0, centre_z + RADIUS + 0.0035), "Z", 8, (), "metal")
@@ -226,13 +226,13 @@ def speaker_visual(mats, segments, detail):
 
 
 def speaker_geometry(mats):
-    b = Builder("jbl_speaker", mats)
+    b = Builder("btspk_speaker", mats)
     b.cylinder(RADIUS, LENGTH, (0, 0, RADIUS), "X", 12, ("component01",), None, smooth=False)
     return b
 
 
 def speaker_shadow(mats):
-    b = Builder("jbl_speaker", mats)
+    b = Builder("btspk_speaker", mats)
     b.cylinder(RADIUS, LENGTH, (0, 0, RADIUS), "X", 10, (), None, smooth=False)
     return b
 
@@ -247,7 +247,7 @@ def make_speaker(collection):
     speaker_geometry(mats).finish(LOD_FIRE_GEOMETRY, 0, "fire", collection)
     speaker_geometry(mats).finish(LOD_VIEW_GEOMETRY, 0, "view", collection)
     speaker_shadow(mats).finish(LOD_SHADOW, 0, "shadow", collection, with_materials=False)
-    memory_lod("jbl_speaker", {
+    memory_lod("btspk_speaker", {
         "sound_source": (0, 0, RADIUS),
         "led_light": (0, RADIUS, 0.02),
         "carry": (0, 0, RADIUS * 2),
@@ -256,12 +256,12 @@ def make_speaker(collection):
     return visuals
 
 
-# ---------------------------------------------------------------- the PartyBox (110 class)
+# ---------------------------------------------------------------- the Party Speaker (110 class)
 BOX_W, BOX_D, BOX_H = 0.292, 0.282, 0.568   # upright, front faces +Y
 
 
-def partybox_visual(mats, segments, detail):
-    b = Builder("jbl_partybox", mats)
+def party_visual(mats, segments, detail):
+    b = Builder("btspk_party", mats)
     foot = 0.012
     body_h = BOX_H - foot
     b.box((BOX_W, BOX_D, body_h), (0, 0, foot + body_h / 2), ("camo", "damage"), "body", bevel=0.012 if detail else 0.0)
@@ -287,23 +287,23 @@ def partybox_visual(mats, segments, detail):
     return b
 
 
-def partybox_geometry(mats):
-    b = Builder("jbl_partybox", mats)
+def party_geometry(mats):
+    b = Builder("btspk_party", mats)
     b.box((BOX_W, BOX_D, BOX_H), (0, 0, BOX_H / 2), ("component01",), None)
     return b
 
 
-def make_partybox(collection):
+def make_party(collection):
     mats = palette()
     visuals = []
     for resolution, (segments, detail) in enumerate([(32, 1), (20, 1), (12, 0), (8, 0)], start=1):
-        visuals.append(partybox_visual(mats, segments, detail).finish(LOD_VISUAL, resolution, f"res{resolution}", collection))
-    geometry = partybox_geometry(mats).finish(LOD_GEOMETRY, 0, "geometry", collection)
+        visuals.append(party_visual(mats, segments, detail).finish(LOD_VISUAL, resolution, f"res{resolution}", collection))
+    geometry = party_geometry(mats).finish(LOD_GEOMETRY, 0, "geometry", collection)
     set_mass(geometry, 11.0)  # about 11 kg (unverified real weight)
-    partybox_geometry(mats).finish(LOD_FIRE_GEOMETRY, 0, "fire", collection)
-    partybox_geometry(mats).finish(LOD_VIEW_GEOMETRY, 0, "view", collection)
-    partybox_geometry(mats).finish(LOD_SHADOW, 0, "shadow", collection, with_materials=False)
-    memory_lod("jbl_partybox", {
+    party_geometry(mats).finish(LOD_FIRE_GEOMETRY, 0, "fire", collection)
+    party_geometry(mats).finish(LOD_VIEW_GEOMETRY, 0, "view", collection)
+    party_geometry(mats).finish(LOD_SHADOW, 0, "shadow", collection, with_materials=False)
+    memory_lod("btspk_party", {
         "sound_source": (0, 0, BOX_H / 2),
         "light_front": (0, BOX_D / 2, 0.28),
         "light_top": (0, 0, BOX_H),
@@ -393,7 +393,7 @@ def preview(visual, path_prefix, size):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    for name, maker, size in (("jbl_speaker", make_speaker, 0.223), ("jbl_partybox", make_partybox, 0.568)):
+    for name, maker, size in (("btspk_speaker", make_speaker, 0.223), ("btspk_party", make_party, 0.568)):
         reset_scene()
         collection = bpy.data.collections.new(name)
         bpy.context.scene.collection.children.link(collection)

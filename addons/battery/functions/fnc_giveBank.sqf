@@ -14,4 +14,4 @@
 params ["_player", "_rounds"];
 
 if (!local _player) exitWith {};
-_player addMagazine ["jbl_powerbank_mag", _rounds max 1 min 100];
+_player addMagazine ["btspk_powerbank_mag", _rounds max 1 min 100];

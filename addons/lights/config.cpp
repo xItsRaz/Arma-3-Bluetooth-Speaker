@@ -7,7 +7,7 @@ class CfgPatches {
         units[] = {};
         weapons[] = {};
         requiredVersion = REQUIRED_VERSION;
-        requiredAddons[] = {"jbl_common", "jbl_audio"};
+        requiredAddons[] = {"btspk_common", "btspk_audio"};
         VERSION_CONFIG;
     };
 };

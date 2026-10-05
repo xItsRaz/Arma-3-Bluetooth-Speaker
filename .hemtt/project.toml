@@ -1,6 +1,6 @@
-name = "JBL Speaker"
+name = "Bluetooth Speaker"
 author = "Raz"
-prefix = "jbl"
+prefix = "btspk"
 mainprefix = "z"
 
 [files]

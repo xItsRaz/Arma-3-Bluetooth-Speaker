@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 /*
  * Author: Raz
- * Client side, once a second. Picks the nearest playing PartyBoxes within 60 m and gives each a
+ * Client side, once a second. Picks the nearest playing Party Speakers within 60 m and gives each a
  * local light; removes lights that are no longer needed (stopped, far away, daytime, setting off).
  *
  * Arguments:
@@ -13,7 +13,7 @@
 
 private _wanted = [];
 if (GVAR(quality) > 0 && {sunOrMoon < 0.5} && {!isNull player}) then {
-    _wanted = (nearestObjects [player, ["jbl_partybox"], 60]) select {
+    _wanted = (nearestObjects [player, ["btspk_party"], 60]) select {
         _x getVariable [VAR_PLAYING, false] && {!(_x getVariable [VAR_BROKEN, false])}
     };
     _wanted resize ((round GVAR(maxLights)) min count _wanted);

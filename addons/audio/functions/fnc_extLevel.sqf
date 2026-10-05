@@ -13,6 +13,6 @@
 
 params ["_speaker"];
 
-if (isNil QGVAR(extReady) || {!(_speaker getVariable ["jbl_extVoice", false])}) exitWith {-1};
+if (isNil QGVAR(extReady) || {!(_speaker getVariable ["btspk_extVoice", false])}) exitWith {-1};
 
-parseNumber ("jbl_speaker" callExtension ["level", [netId _speaker]] select 0)
+parseNumber ("btspk_speaker" callExtension ["level", [netId _speaker]] select 0)

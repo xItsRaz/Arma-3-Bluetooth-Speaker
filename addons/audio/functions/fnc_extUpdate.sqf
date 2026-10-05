@@ -24,8 +24,8 @@
 params ["_speaker", "_eye"];
 
 private _type = configOf _speaker;
-private _range = (missionNamespace getVariable [getText (_type >> "jbl_rangeSetting"), getNumber (_type >> "jbl_range")]) max 1;
-private _baseGain = _speaker getVariable ["jbl_extGain", 0.45];
+private _range = (missionNamespace getVariable [getText (_type >> "btspk_rangeSetting"), getNumber (_type >> "btspk_range")]) max 1;
+private _baseGain = _speaker getVariable ["btspk_extGain", 0.45];
 private _gain = _baseGain;
 private _source = (getPosASL _speaker) vectorAdd [0, 0, 0.25];
 private _virtual = _source;
@@ -101,6 +101,6 @@ if (_mode > 0 && {_distance < _range}) then {
     };
 };
 
-_speaker setVariable ["jbl_extDebug", [_distance, _walls, _glass, _openPath, _muffle, _gain, _reverb], false];
+_speaker setVariable ["btspk_extDebug", [_distance, _walls, _glass, _openPath, _muffle, _gain, _reverb], false];
 
-"jbl_speaker" callExtension ["voice", [netId _speaker, _virtual select 0, _virtual select 1, _virtual select 2, _gain, _range, _muffle, _reverb, _extra]];
+"btspk_speaker" callExtension ["voice", [netId _speaker, _virtual select 0, _virtual select 1, _virtual select 2, _gain, _range, _muffle, _reverb, _extra]];

@@ -34,4 +34,4 @@ if ((_speaker getVariable [VAR_CHARGING, ""]) != "") then {
         _text = _text + format [" - about %1 of play time at the current volume", [_percent / 100 / _drain] call _format];
     };
 };
-hint format ["JBL Speaker\n\n%1", _text];
+hint format ["Bluetooth Speaker\n\n%1", _text];

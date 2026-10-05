@@ -8,7 +8,7 @@ addons/audio/sounds/*.wav
 # Build output
 .hemttout/
 releases/
-@JBLSpeaker/
+@BluetoothSpeaker/
 *.pbo
 *.bisign
 *.biprivatekey
@@ -26,3 +26,6 @@ tools/blender/preview/
 
 # Private working notes (kept locally, not published)
 PLAN.md
+
+__pycache__/
+*.pyc

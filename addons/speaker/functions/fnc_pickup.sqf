@@ -2,7 +2,7 @@
 /*
  * Author: Raz
  * Server only. Turns a placed speaker into a magazine in the player's inventory.
- * Permission was already checked by jbl_common_fnc_command.
+ * Permission was already checked by btspk_common_fnc_command.
  *
  * Arguments:
  * 0: Speaker <OBJECT>

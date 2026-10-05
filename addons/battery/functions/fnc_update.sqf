@@ -19,20 +19,20 @@ if (isNull _speaker) exitWith {};
 private _desired = "";
 
 if (GVAR(enabled) && {!(_speaker getVariable [VAR_BROKEN, false])}) then {
-    private _vehicle = _speaker getVariable ["jbl_cargoVehicle", objNull];
-    if (isNull _vehicle) then { _vehicle = _speaker getVariable ["jbl_mountedOn", objNull]; };
+    private _vehicle = _speaker getVariable ["btspk_cargoVehicle", objNull];
+    if (isNull _vehicle) then { _vehicle = _speaker getVariable ["btspk_mountedOn", objNull]; };
     private _unit = _speaker getVariable [VAR_CLIPPED_TO, objNull];
     if (isNull _vehicle && {!isNull _unit}) then { _vehicle = objectParent _unit; };
     if (GVAR(chargeInVehicles) && {!isNull _vehicle} && {alive _vehicle} && {isEngineOn _vehicle}) then {
         _desired = "vehicle";
     };
 
-    private _generator = _speaker getVariable ["jbl_generator", objNull];
+    private _generator = _speaker getVariable ["btspk_generator", objNull];
     if (!isNull _generator) then {
         if (alive _generator && {_generator distance _speaker < 6}) then {
             if (_desired == "") then { _desired = "generator"; };
         } else {
-            _speaker setVariable ["jbl_generator", objNull, true];
+            _speaker setVariable ["btspk_generator", objNull, true];
         };
     };
 };

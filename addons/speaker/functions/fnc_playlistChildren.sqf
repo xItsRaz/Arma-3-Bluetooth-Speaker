@@ -25,7 +25,7 @@ private _children = [];
 {
     private _name = [_x, format ["> %1", _x]] select (_forEachIndex == _current);
     private _action = [
-        format ["jbl_speaker_track%1", _forEachIndex], _name, "",
+        format ["btspk_speaker_track%1", _forEachIndex], _name, "",
         { params ["_target", "_player", "_index"]; [_target, _player, "track", _index] call FUNC(send); },
         { true }, {}, _forEachIndex
     ] call ace_interact_menu_fnc_createAction;

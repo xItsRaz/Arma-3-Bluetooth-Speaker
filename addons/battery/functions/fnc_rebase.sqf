@@ -19,10 +19,10 @@ if (!isServer || {isNull _speaker}) exitWith {};
 private _fraction = ([_speaker] call FUNC(get)) / 100;
 private _rate = 0;
 
-if (GVAR(enabled) && {!(_speaker isKindOf "jbl_partybox") || {GVAR(partyboxBattery)}}) then {
+if (GVAR(enabled) && {!(_speaker isKindOf "btspk_party") || {GVAR(partyBattery)}}) then {
     private _volume = _speaker getVariable [VAR_VOLUME, VOLUME_DEFAULT];
     if (_speaker getVariable [VAR_PLAYING, false] && {!(_speaker getVariable [VAR_BROKEN, false])}) then {
-        // Full to empty in jbl_battery_life minutes at volume 5, slower at lower volumes
+        // Full to empty in btspk_battery_life minutes at volume 5, slower at lower volumes
         _rate = _rate - (0.3 + 0.7 * _volume / VOLUME_MAX) / (GVAR(life) * 60);
     };
     if ((_speaker getVariable [VAR_CHARGING, ""]) != "") then {
@@ -38,8 +38,8 @@ if (_fraction > 0.05 && {_speaker getVariable [VAR_DEAD, false]}) then { _speake
 private _low = GVAR(enabled) && {_fraction <= 0.1};
 if (_low != (_speaker getVariable [VAR_LOW, false])) then { _speaker setVariable [VAR_LOW, _low, true]; };
 
-private _token = (_speaker getVariable ["jbl_batToken", 0]) + 1;
-_speaker setVariable ["jbl_batToken", _token];
+private _token = (_speaker getVariable ["btspk_batToken", 0]) + 1;
+_speaker setVariable ["btspk_batToken", _token];
 
 private _schedule = {
     params ["_seconds", "_event"];

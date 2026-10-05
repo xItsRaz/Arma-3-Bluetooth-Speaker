@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 /*
  * Author: Raz
- * Shows the speaker's owner, lock, PartyBoost status, volume and song (local hint).
+ * Shows the speaker's owner, lock, Party Link status, volume and song (local hint).
  *
  * Arguments:
  * 0: Speaker <OBJECT>
@@ -27,7 +27,7 @@ if (_target getVariable [VAR_BROKEN, false]) then { _condition = "broken"; } els
 };
 private _battery = ["off", format ["%1%%", round ([_target] call EFUNC(battery,get))]] select EGVAR(battery,enabled);
 
-hint format ["JBL Speaker\n\nOwner: %1\nLocked: %2\nPartyBoost: %3\nVolume: %4\nNow playing: %5\nBattery: %6\nCondition: %7",
+hint format ["Bluetooth Speaker\n\nOwner: %1\nLocked: %2\nParty Link: %3\nVolume: %4\nNow playing: %5\nBattery: %6\nCondition: %7",
     ["nobody", _owner] select (_owner != ""),
     ["no", "yes"] select (_owner != "" && {_target getVariable [VAR_LOCKED, true]}),
     _link,

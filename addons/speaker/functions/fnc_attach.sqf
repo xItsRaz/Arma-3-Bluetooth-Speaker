@@ -24,8 +24,8 @@ if (isNull _speaker || {isNull _parent}) exitWith {};
 private _oldUnit = _speaker getVariable [VAR_CLIPPED_TO, objNull];
 if (!isNull _oldUnit) then { _oldUnit setVariable [VAR_CLIPPED, objNull, true]; };
 _speaker setVariable [VAR_CLIPPED_TO, objNull, true];
-_speaker setVariable ["jbl_mountedOn", objNull, true];
-_speaker setVariable ["jbl_wasMounted", false];
+_speaker setVariable ["btspk_mountedOn", objNull, true];
+_speaker setVariable ["btspk_wasMounted", false];
 
 if (_bone == "") then {
     _speaker attachTo [_parent, _offset];
@@ -34,15 +34,15 @@ if (_bone == "") then {
 };
 _speaker setDir _turn; // relative to what it is attached to
 
-_speaker setVariable ["jbl_mountOffset", _offset, true];
-_speaker setVariable ["jbl_mountTurn", _turn, true];
-_speaker setVariable ["jbl_mountBone", _bone, true];
-_speaker setVariable ["jbl_mountPreset", _preset, true];
+_speaker setVariable ["btspk_mountOffset", _offset, true];
+_speaker setVariable ["btspk_mountTurn", _turn, true];
+_speaker setVariable ["btspk_mountBone", _bone, true];
+_speaker setVariable ["btspk_mountPreset", _preset, true];
 
 if (_parent isKindOf "CAManBase") then {
     _speaker setVariable [VAR_CLIPPED_TO, _parent, true];
     _parent setVariable [VAR_CLIPPED, _speaker, true];
 } else {
-    _speaker setVariable ["jbl_mountedOn", _parent, true];
-    _speaker setVariable ["jbl_wasMounted", true];
+    _speaker setVariable ["btspk_mountedOn", _parent, true];
+    _speaker setVariable ["btspk_wasMounted", true];
 };

@@ -13,7 +13,7 @@ This project (see `LICENSE`) is licensed under the GNU General Public License, v
 - [CBA_A3](https://github.com/CBATeam/CBA_A3), GNU GPL v2
 - [ACE3](https://github.com/acemod/ACE3), GNU GPL v2
 
-## Sound extension (`extension/`), Rust crates compiled into `jbl_speaker_x64.dll`
+## Sound extension (`extension/`), Rust crates compiled into `btspk_speaker_x64.dll`
 
 | Crate | License |
 |---|---|
@@ -33,4 +33,4 @@ These crates have further dependencies of their own; the full list with exact ve
 
 ## Trademarks
 
-JBL is a trademark of HARMAN International Industries, Incorporated. Spotify is a registered trademark of Spotify AB. The Bluetooth word mark is a registered trademark of Bluetooth SIG, Inc. Arma 3 is a trademark of Bohemia Interactive a.s. This project is unofficial and not affiliated with or endorsed by any of them.
+Spotify is a registered trademark of Spotify AB. The Bluetooth word mark is a registered trademark of Bluetooth SIG, Inc. Arma 3 is a trademark of Bohemia Interactive a.s. This project is unofficial and not affiliated with or endorsed by any of them.

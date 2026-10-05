@@ -24,16 +24,16 @@ jobs:
         if: always()
         run: ls -R .hemttout/release releases 2>/dev/null || true
 
-      # Download this artifact, unzip it into a folder named @JBLSpeaker, load it as a local mod
+      # Download this artifact, unzip it into a folder named @BluetoothSpeaker, load it as a local mod
       - name: Upload mod
         uses: actions/upload-artifact@v4
         with:
-          name: JBLSpeaker
+          name: BluetoothSpeaker
           path: .hemttout/release/
           if-no-files-found: error
 
-  # The sound extension (Rust). Put jbl_speaker_x64.dll next to the addons folder of @JBLSpeaker.
-  # Copying your songs to @JBLSpeaker/music is what the DLL plays them from (see README).
+  # The sound extension (Rust). Put btspk_speaker_x64.dll next to the addons folder of @BluetoothSpeaker.
+  # Copying your songs to @BluetoothSpeaker/music is what the DLL plays them from (see README).
   extension:
     runs-on: windows-latest
     defaults:
@@ -51,6 +51,6 @@ jobs:
       - name: Upload extension
         uses: actions/upload-artifact@v4
         with:
-          name: JBLSpeaker-extension
-          path: extension/target/release/jbl_speaker_x64.dll
+          name: BluetoothSpeaker-extension
+          path: extension/target/release/btspk_speaker_x64.dll
           if-no-files-found: error

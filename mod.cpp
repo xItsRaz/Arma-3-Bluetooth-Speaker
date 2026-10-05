@@ -1,4 +1,4 @@
-name = "JBL Speaker";
+name = "Bluetooth Speaker";
 author = "Raz";
 overview = "WORK IN PROGRESS. Portable and party Bluetooth-style speakers: carry, mount on backpacks and vehicles, charge, break. Everyone nearby hears your playlist, in sync. Requires CBA_A3 and ACE3.";
-tooltip = "JBL Speaker (WIP)";
+tooltip = "Bluetooth Speaker (WIP)";

@@ -25,7 +25,7 @@ if (_target getVariable [VAR_BROKEN, false]) exitWith {
 };
 
 private _battery = "";
-if (jbl_battery_enabled) then { _battery = format ["%1%%", round ([_target] call jbl_battery_fnc_get)]; };
+if (btspk_battery_enabled) then { _battery = format ["%1%%", round ([_target] call btspk_battery_fnc_get)]; };
 
 if !(_target getVariable [VAR_PLAYING, false]) exitWith {
     _actionData set [1, ["Speaker", format ["Speaker (%1)", _battery]] select (_battery != "")];

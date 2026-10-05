@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 /*
  * Author: Raz
- * Server only. PartyBoost: takes a speaker out of its group and stops it.
+ * Server only. Party Link: takes a speaker out of its group and stops it.
  * Used on the leader, it breaks up the whole group (the leader keeps playing).
  *
  * Arguments:
@@ -19,7 +19,7 @@ private _stop = {
     _member setVariable [VAR_LEADER, objNull, true];
     _member setVariable [VAR_PLAYING, false, true];
     [QGVAR(sync), [_member, [false, 0, 0, VOLUME_DEFAULT]]] call CBA_fnc_globalEvent;
-    ["jbl_battery_rebase", [_member]] call CBA_fnc_localEvent;
+    ["btspk_battery_rebase", [_member]] call CBA_fnc_localEvent;
 };
 
 private _leader = _speaker getVariable [VAR_LEADER, objNull];
@@ -30,11 +30,11 @@ if (isNull _leader) then {
     { [_x] call _stop; } forEach _followers;
     _speaker setVariable [VAR_FOLLOWERS, [], true];
     if (_followers isNotEqualTo []) then {
-        [_player, format ["PartyBoost: group ended, %1 speaker(s) unlinked", count _followers]] call EFUNC(common,notify);
+        [_player, format ["Party Link: group ended, %1 speaker(s) unlinked", count _followers]] call EFUNC(common,notify);
     };
 } else {
     // Follower: leave the group
     _leader setVariable [VAR_FOLLOWERS, (_leader getVariable [VAR_FOLLOWERS, []]) - [_speaker, objNull], true];
     [_speaker] call _stop;
-    [_player, "PartyBoost: speaker unlinked"] call EFUNC(common,notify);
+    [_player, "Party Link: speaker unlinked"] call EFUNC(common,notify);
 };

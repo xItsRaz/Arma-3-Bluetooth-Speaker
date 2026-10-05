@@ -2,7 +2,7 @@
 
 class CfgPatches {
     class ADDON {
-        name = "JBL Speaker";
+        name = "Bluetooth Speaker";
         author = "Raz";
         units[] = {};
         weapons[] = {};

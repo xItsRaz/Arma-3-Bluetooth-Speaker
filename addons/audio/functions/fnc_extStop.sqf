@@ -12,8 +12,8 @@
 
 params ["_speaker"];
 
-if (isNil QGVAR(extReady) || {!(_speaker getVariable ["jbl_extVoice", false])}) exitWith {};
+if (isNil QGVAR(extReady) || {!(_speaker getVariable ["btspk_extVoice", false])}) exitWith {};
 
-"jbl_speaker" callExtension ["stop", [netId _speaker]];
-_speaker setVariable ["jbl_extVoice", false];
+"btspk_speaker" callExtension ["stop", [netId _speaker]];
+_speaker setVariable ["btspk_extVoice", false];
 GVAR(extVoices) deleteAt (GVAR(extVoices) find _speaker);

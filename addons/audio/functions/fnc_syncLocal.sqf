@@ -10,8 +10,8 @@
  * 2: Built-in sound only: skip the sound extension, e.g. after it could not play a file <BOOL> (default: false)
  *
  * Range and loudness are fixed per speaker type, from its config:
- *   jbl_rangeSetting (CBA setting with the range), jbl_range (fallback, metres),
- *   jbl_soundSuffix (e.g. "_party" for the louder sound classes)
+ *   btspk_rangeSetting (CBA setting with the range), btspk_range (fallback, metres),
+ *   btspk_soundSuffix (e.g. "_party" for the louder sound classes)
  *
  * Return Value:
  * None
@@ -49,10 +49,10 @@ if (_offset >= (_durations select _index)) exitWith {}; // server will advance
 
 private _type = configOf _speaker;
 // Range comes from a CBA setting named in the config, with the config value as fallback
-private _range = (missionNamespace getVariable [getText (_type >> "jbl_rangeSetting"), getNumber (_type >> "jbl_range")]) max 1;
+private _range = (missionNamespace getVariable [getText (_type >> "btspk_rangeSetting"), getNumber (_type >> "btspk_range")]) max 1;
 // Sound class = <track>_v<level><type suffix>; your personal setting can lower the level
 private _level = (_volume - GVAR(personalVolume)) max 1 min VOLUME_MAX;
-private _soundClass = format ["%1_v%2%3", _tracks select _index, _level, getText (_type >> "jbl_soundSuffix")];
+private _soundClass = format ["%1_v%2%3", _tracks select _index, _level, getText (_type >> "btspk_soundSuffix")];
 if (!isClass (configFile >> "CfgSounds" >> _soundClass)) then { _soundClass = _tracks select _index; };
 
 private _pitch = [1, 0.95] select (_speaker getVariable [VAR_DAMAGED, false]);
@@ -64,6 +64,6 @@ if (!_extension) then {
 };
 
 if (EGVAR(common,notifications) > 0 && {player distance _speaker < _range}) then {
-    private _message = format ["JBL: now playing %1", _titles select _index];
+    private _message = format ["Speaker: now playing %1", _titles select _index];
     if (EGVAR(common,notifications) == 1) then { systemChat _message } else { hintSilent _message };
 };

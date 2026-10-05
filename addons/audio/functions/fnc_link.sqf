@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 /*
  * Author: Raz
- * Server only. PartyBoost: links nearby speakers to this one so they all play
+ * Server only. Party Link: links nearby speakers to this one so they all play
  * the same song at the same moment. This speaker becomes the group's leader
  * (or, if it's already linked, its leader adds them).
  *
@@ -21,7 +21,7 @@ if (isNull _leader) then { _leader = _speaker; };
 private _followers = (_leader getVariable [VAR_FOLLOWERS, []]) select {!isNull _x};
 
 // Speakers this player may control that aren't already in a group
-private _candidates = (nearestObjects [_speaker, ["jbl_speaker"], GVAR(linkRadius)]) select {
+private _candidates = (nearestObjects [_speaker, ["btspk_speaker"], GVAR(linkRadius)]) select {
     _x != _leader
     && {[_x, _player] call EFUNC(common,canControl)}
     && {!(_x in _followers)}
@@ -45,7 +45,7 @@ if (_candidates isNotEqualTo []) then {
     [_leader, _candidates] call FUNC(broadcast);
 };
 
-[_player, format ["PartyBoost: %1 speaker(s) linked (%2 of %3 in group)",
+[_player, format ["Party Link: %1 speaker(s) linked (%2 of %3 in group)",
     count _candidates, 1 + count _followers, _max]] call EFUNC(common,notify);
 
 count _candidates

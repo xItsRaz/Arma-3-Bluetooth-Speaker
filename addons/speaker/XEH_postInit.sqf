@@ -4,7 +4,7 @@
 if (isServer) then {
     ["ace_cargoLoaded", {
         params ["_item"];
-        if !(_item isKindOf "jbl_speaker") exitWith {};
+        if !(_item isKindOf "btspk_speaker") exitWith {};
         [_item] call EFUNC(audio,halt);
     }] call CBA_fnc_addEventHandler;
 
@@ -28,9 +28,9 @@ if (!hasInterface) exitWith {};
 // The server hands a picked-up speaker to this player as a magazine
 [QGVAR(giveMag), LINKFUNC(giveMag)] call CBA_fnc_addEventHandler;
 
-// Keybinds (Options > Controls > Configure Addons > JBL Speaker). Unbound by default.
-["JBL Speaker", QGVAR(playStop), ["Play / stop speaker", "Nearest speaker you control (5 m)"], { ["playStop"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
-["JBL Speaker", QGVAR(next), ["Next song", "Nearest speaker you control (5 m)"], { ["next"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
-["JBL Speaker", QGVAR(volumeUp), ["Volume up", "Nearest speaker you control (5 m)"], { ["volumeUp"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
-["JBL Speaker", QGVAR(volumeDown), ["Volume down", "Nearest speaker you control (5 m)"], { ["volumeDown"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
-["JBL Speaker", QGVAR(mute), ["Mute all speakers (for me)", "Toggle. Only affects you."], { ["mute"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
+// Keybinds (Options > Controls > Configure Addons > Bluetooth Speaker). Unbound by default.
+["Bluetooth Speaker", QGVAR(playStop), ["Play / stop speaker", "Nearest speaker you control (5 m)"], { ["playStop"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
+["Bluetooth Speaker", QGVAR(next), ["Next song", "Nearest speaker you control (5 m)"], { ["next"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
+["Bluetooth Speaker", QGVAR(volumeUp), ["Volume up", "Nearest speaker you control (5 m)"], { ["volumeUp"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
+["Bluetooth Speaker", QGVAR(volumeDown), ["Volume down", "Nearest speaker you control (5 m)"], { ["volumeDown"] call FUNC(keybind) }] call CBA_fnc_addKeybind;
+["Bluetooth Speaker", QGVAR(mute), ["Mute all speakers (for me)", "Toggle. Only affects you."], { ["mute"] call FUNC(keybind) }] call CBA_fnc_addKeybind;

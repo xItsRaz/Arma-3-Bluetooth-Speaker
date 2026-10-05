@@ -2,7 +2,7 @@
 /*
  * Author: Raz
  * Server only. Owns the playback state and tells every client what to play.
- * Called by jbl_common_fnc_command after validation. For a PartyBoost group this is the leader;
+ * Called by btspk_common_fnc_command after validation. For a Party Link group this is the leader;
  * every follower gets the same state.
  *
  * Arguments:

@@ -8,7 +8,7 @@ Portable and party speakers that feel real. Carry one, set it down, clip it to y
 
 Requires **[CBA_A3](https://steamcommunity.com/workshop/filedetails/?id=450814997)** and **[ACE3](https://steamcommunity.com/workshop/filedetails/?id=463939057)**.
 
-> **Naming.** In game the two speakers currently show up as "JBL Speaker" and "JBL PartyBox", and internal names use a `jbl` prefix. These are working names from the project's start. The mod is not affiliated with or endorsed by any speaker manufacturer, and the names will be changed before a proper release.
+> **Naming.** In game the two speakers are called **Bluetooth Speaker** (portable) and **Bluetooth Party Speaker**. Internal names (classes, settings, functions, addon files) use the prefix `btspk`. This mod is not affiliated with any speaker manufacturer.
 
 ## What you get
 
@@ -27,7 +27,7 @@ Requires **[CBA_A3](https://steamcommunity.com/workshop/filedetails/?id=45081499
 **Playback**
 - Plays a playlist of songs packed into the mod (you add your own, see below). Play, stop, next, previous, pick a song, volume 1 to 5.
 - Everyone in range hears the same moment of the same song. Players who join late catch up.
-- **PartyBoost**: link up to 8 speakers within 15 m, they play in sync and any of them controls the group.
+- **Party Link**: link up to 8 speakers within 15 m, they play in sync and any of them controls the group.
 
 **Rules and ownership**
 - Whoever places a speaker owns it. Owners can lock it to themselves or unlock it for everyone. Eden or Zeus placed speakers start unowned (first to claim, anyone, or admins only, a server setting).
@@ -48,10 +48,10 @@ Requires **[CBA_A3](https://steamcommunity.com/workshop/filedetails/?id=45081499
 
 ## Using it in game
 
-In Eden place **JBL Speaker** (Props) or **JBL PartyBox**. Look at a speaker and open the ACE interaction menu (default: Windows key):
+In Eden place **Bluetooth Speaker** (Props) or **Bluetooth Party Speaker**. Look at a speaker and open the ACE interaction menu (default: Windows key):
 
 - **Play / Stop / Next / Previous**, **Pick a song**, **Volume**
-- **PartyBoost**: link nearby speakers, unlink one or all
+- **Party Link**: link nearby speakers, unlink one or all
 - **Mount**: on my body, on a vehicle (within 6 m), move, adjust position, take off
 - **Charging**: plug into a generator, use a power bank. **Check battery** is open to everyone
 - **Pick up** (portable speaker only): into the inventory, or **Pick up and keep playing** to clip it to your backpack
@@ -62,7 +62,7 @@ Self interaction (Ctrl+Windows): **Place speaker** and **Clip speaker to backpac
 
 Keybinds (unbound by default): Options, Controls, Configure Addons. Play/stop, next song, volume up/down and mute act on the nearest speaker you can control within 5 m.
 
-Settings: Options, Addon Options. Server settings are forced on everyone (permissions, ranges, battery, damage, PartyBoost limits), client settings are personal (mute, volume, notifications, lights, sound effects, debug readout).
+Settings: Options, Addon Options. Server settings are forced on everyone (permissions, ranges, battery, damage, Party Link limits), client settings are personal (mute, volume, notifications, lights, sound effects, debug readout).
 
 ## Adding music
 
@@ -88,7 +88,7 @@ Then run:
 powershell -File tools\make_mod.ps1            # add -Music to convert your songs first
 ```
 
-The finished mod is in `.hemttout\build\@JBLSpeaker` (a hidden folder): the addons, `jbl_speaker_x64.dll` and your `music` folder. Load it in the Arma 3 launcher (Mods, Add local mod) together with CBA_A3 and ACE3.
+The finished mod is in `.hemttout\build\@BluetoothSpeaker` (a hidden folder): the addons, `btspk_speaker_x64.dll` and your `music` folder. Load it in the Arma 3 launcher (Mods, Add local mod) together with CBA_A3 and ACE3.
 
 ### Other systems
 
@@ -96,15 +96,15 @@ The finished mod is in `.hemttout\build\@JBLSpeaker` (a hidden folder): the addo
 
 ### GitHub builds
 
-Every push builds the addons in GitHub Actions and uploads them as the **JBLSpeaker** artifact, and builds the sound extension as **JBLSpeaker-extension**. These builds contain **no music**.
+Every push builds the addons in GitHub Actions and uploads them as the **BluetoothSpeaker** artifact, and builds the sound extension as **BluetoothSpeaker-extension**. These builds contain **no music**.
 
 ## The sound extension
 
-`extension/` is a Rust library (`jbl_speaker_x64.dll`) that Arma loads with `callExtension`. It decodes the songs, mixes every speaker in 3D and plays them through your sound card. When it is installed the mod uses it automatically; check the Arma `.rpt` log for `JBL Speaker: sound extension active`.
+`extension/` is a Rust library (`btspk_speaker_x64.dll`) that Arma loads with `callExtension`. It decodes the songs, mixes every speaker in 3D and plays them through your sound card. When it is installed the mod uses it automatically; check the Arma `.rpt` log for `Bluetooth Speaker: sound extension active`.
 
 - **BattlEye:** Arma blocks extensions that BattlEye has not approved, so the game must be started **without BattlEye** to use the DLL (the launcher has a start option for this). That limits you to servers with BattlEye off. Without the DLL everything still works with Arma's built-in sound.
 - **What it does:** distance falloff that reaches the speaker's range, panning from where you look, muffling through walls (about 15 dB per wall) and glass (a few dB, dull), sound that comes through an open door or window when a wall blocks the straight line, and echo with early reflections, a tail and a slap echo in big rooms.
-- **Tuning:** Addon Options, JBL Speaker, Sound has a loudness slider, a setting for how many effects to compute, and a **Sound debug readout** that shows what the extension decided for the nearest speaker.
+- **Tuning:** Addon Options, Bluetooth Speaker, Sound has a loudness slider, a setting for how many effects to compute, and a **Sound debug readout** that shows what the extension decided for the nearest speaker.
 
 ## 3D models
 
@@ -148,6 +148,6 @@ Copyright (C) 2026 Raz. This project is free software: you can redistribute it a
 
 ## Trademarks and disclaimer
 
-JBL is a trademark of HARMAN International Industries, Incorporated, registered in the United States and other countries. Spotify is a registered trademark of Spotify AB. The Bluetooth word mark is a registered trademark owned by Bluetooth SIG, Inc. Arma 3 is a trademark of Bohemia Interactive a.s. All other trademarks are the property of their respective owners.
+Spotify is a registered trademark of Spotify AB. The Bluetooth word mark is a registered trademark owned by Bluetooth SIG, Inc. Arma 3 is a trademark of Bohemia Interactive a.s. All other trademarks are the property of their respective owners.
 
 This is an unofficial, fan-made project. It is not affiliated with, authorised, sponsored or endorsed by any of these companies. Product names are used only to describe what the speakers resemble or what the project plans to connect to. Spotify support is planned and **not implemented yet**; when it exists it will only work with a user's own Spotify Premium account, and using unofficial Spotify clients may go against Spotify's terms, so it is for personal use at your own risk.

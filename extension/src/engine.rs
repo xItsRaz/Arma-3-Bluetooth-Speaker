@@ -32,7 +32,7 @@ fn start() -> Result<Engine, String> {
     let (tx, rx) = channel::<Result<Engine, String>>();
     // The stream lives on its own thread (it must never be dropped and is not Send everywhere)
     thread::Builder::new()
-        .name("jbl-audio".into())
+        .name("btspk-audio".into())
         .spawn(move || match open() {
             Ok((engine, stream)) => {
                 let _ = tx.send(Ok(engine));
@@ -93,7 +93,7 @@ where
                     }
                 }
             },
-            |e: cpal::Error| eprintln!("jbl_speaker: audio stream error: {e}"),
+            |e: cpal::Error| eprintln!("btspk_speaker: audio stream error: {e}"),
             None,
         )
         .map_err(|e| e.to_string())

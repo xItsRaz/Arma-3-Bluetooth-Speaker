@@ -3,8 +3,8 @@
 A working reference for the parts of Arma 3 modding this mod uses.
 
 ## The pieces of a mod
-- **PBO**: an archive of a folder (`jbl_speaker/`). The file `$PBOPREFIX$` sets its internal path, so `\jbl_speaker\functions\fn_init.sqf` resolves.
-- **config.cpp**: the static definitions, read once at game start. It uses a C-like class syntax with inheritance (`class JBL_Speaker: Land_FMradio_F {...}`) and supports `#include` / `#define` (C preprocessor).
+- **PBO**: an archive of a folder (`btspk_speaker/`). The file `$PBOPREFIX$` sets its internal path, so `\btspk_speaker\functions\fn_init.sqf` resolves.
+- **config.cpp**: the static definitions, read once at game start. It uses a C-like class syntax with inheritance (`class btspk_speaker: Land_FMradio_F {...}`) and supports `#include` / `#define` (C preprocessor).
   - `CfgPatches`: names the addon. `requiredAddons[]` controls load order, so anything you inherit from must load first.
   - `CfgFunctions`: registers SQF files as `TAG_fnc_name`. They're compiled once and are safe from overwriting.
   - `CfgVehicles`: objects and units. `scope = 2` means visible in the editor.
@@ -46,8 +46,8 @@ A working reference for the parts of Arma 3 modding this mod uses.
 - You can't change volume while a sound plays. Only Ogg Vorbis / WSS / WAV are supported. Mono files are placed properly in 3D.
 
 ## Extensions (DLLs)
-- `"jbl_speaker" callExtension ["command", [args]]` returns `[result, returnCode, errorCode]`. It's synchronous and runs on the game thread, so **return quickly** and do the real work on DLL threads.
-- 64-bit DLL name: `jbl_speaker_x64.dll`, placed in the mod root (`@JBLSpeaker/`).
+- `"btspk_speaker" callExtension ["command", [args]]` returns `[result, returnCode, errorCode]`. It's synchronous and runs on the game thread, so **return quickly** and do the real work on DLL threads.
+- 64-bit DLL name: `btspk_speaker_x64.dll`, placed in the mod root (`@BluetoothSpeaker/`).
 - Exports (handled for us by **arma-rs** in Rust): `RVExtension`, `RVExtensionArgs`, `RVExtensionVersion`, `RVExtensionRegisterCallback`.
 - Async results go back through the callback and show up as the `ExtensionCallback` mission event.
 - BattlEye blocks DLLs that aren't whitelisted.
@@ -57,10 +57,10 @@ A working reference for the parts of Arma 3 modding this mod uses.
   ```cpp
   class ACE_Actions {
       class ACE_MainActions {
-          class jbl_play {
+          class btspk_play {
               displayName = "Play";
-              condition = "!(_target getVariable ['jbl_playing', false])";
-              statement = "[_target, 'play'] remoteExecCall ['JBL_fnc_command', 2]";
+              condition = "!(_target getVariable ['btspk_playing', false])";
+              statement = "[_target, 'play'] remoteExecCall ['btspk_common_fnc_command', 2]";
           };
       };
   };

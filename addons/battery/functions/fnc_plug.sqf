@@ -20,6 +20,6 @@ if (_generators isEqualTo []) exitWith {
     [_player, "No generator within 5 m"] call EFUNC(common,notify);
 };
 
-_speaker setVariable ["jbl_generator", _generators select 0, true];
+_speaker setVariable ["btspk_generator", _generators select 0, true];
 [_speaker] call FUNC(update);
 [_player, "Plugged into the generator"] call EFUNC(common,notify);

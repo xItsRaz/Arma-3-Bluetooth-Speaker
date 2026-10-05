@@ -5,7 +5,7 @@
  *
  * On a person (offset is in the spine3 bone space, tune in game with "Adjust position"):
  *   "back" (on the backpack), "side" (at the hip), "under" (under the backpack): the last two are
- *   for the JBL Speaker only, the PartyBox always sits on the back
+ *   for the Bluetooth Speaker only, the Party Speaker always sits on the back
  * On a vehicle (offset from the vehicle's centre, from its bounding box):
  *   "roof", "rear", "front"
  *
@@ -20,11 +20,11 @@
 
 params ["_speaker", "_parent", "_preset"];
 
-private _party = _speaker isKindOf "jbl_partybox";
+private _party = _speaker isKindOf "btspk_party";
 
 if (_parent isKindOf "CAManBase") exitWith {
-    // [name, offset, turn]; the PartyBox is bigger, so it sits further out
-    // (the PartyBox only has "back": anything else falls back to the first entry)
+    // [name, offset, turn]; the Party Speaker is bigger, so it sits further out
+    // (the Party Speaker only has "back": anything else falls back to the first entry)
     private _table = [
         [["back", [-0.15, -0.15, 0], 0], ["side", [0.22, -0.05, -0.15], 90], ["under", [-0.10, -0.18, -0.38], 0]],
         [["back", [-0.25, -0.32, 0], 0]]

@@ -24,7 +24,7 @@ if ((getPosASL _player) distance _posASL > 8 || {_clip && {!isNull (_player getV
     [QGVAR(giveMag), [_player, _rounds], _player] call CBA_fnc_targetEvent;
 };
 
-private _speaker = createVehicle ["jbl_speaker", [0, 0, 0], [], 0, "CAN_COLLIDE"];
+private _speaker = createVehicle ["btspk_speaker", [0, 0, 0], [], 0, "CAN_COLLIDE"];
 _speaker setDir _dir;
 _speaker setPosASL _posASL;
 _speaker setVectorUp _normal;

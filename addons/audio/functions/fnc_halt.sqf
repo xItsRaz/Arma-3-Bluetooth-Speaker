@@ -2,7 +2,7 @@
 /*
  * Author: Raz
  * Server only. Stops a speaker for good reason (loaded into a vehicle, picked up, broken,
- * battery empty): takes it out of its PartyBoost group and stops the music.
+ * battery empty): takes it out of its Party Link group and stops the music.
  *
  * Arguments:
  * 0: Speaker <OBJECT>

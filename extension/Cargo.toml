@@ -1,14 +1,14 @@
 [package]
-name = "jbl_speaker"
+name = "btspk_speaker"
 version = "0.1.0"
 edition = "2021"
-description = "Arma 3 extension for the JBL Speaker mod: 3D audio mixer, file/URL playback"
+description = "Arma 3 extension for the Bluetooth Speaker mod: 3D audio mixer, file/URL playback"
 publish = false
 license = "GPL-2.0-or-later"
 
 [lib]
-# Arma loads "jbl_speaker_x64.dll" for callExtension "jbl_speaker"
-name = "jbl_speaker_x64"
+# Arma loads "btspk_speaker_x64.dll" for callExtension "btspk_speaker"
+name = "btspk_speaker_x64"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]

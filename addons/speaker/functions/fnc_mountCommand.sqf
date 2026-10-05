@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 /*
  * Author: Raz
- * Server only. Mounting commands (permission was already checked by jbl_common_fnc_command):
+ * Server only. Mounting commands (permission was already checked by btspk_common_fnc_command):
  *   "mount"    args [kind, position]: kind "backpack" (position "back" | "side" | "under")
  *              or "vehicle" (position "roof" | "rear" | "front")
  *   "mountPos" args [position]: move it to another position on what it is mounted on
@@ -23,16 +23,16 @@ params [["_speaker", objNull, [objNull]], ["_player", objNull, [objNull]], ["_co
 if (isNull _speaker || {!alive _player}) exitWith {};
 
 private _tell = { params ["_text"]; [_player, _text] call EFUNC(common,notify); };
-private _party = _speaker isKindOf "jbl_partybox";
+private _party = _speaker isKindOf "btspk_party";
 // What it is on now: a person or a vehicle (objNull = on the ground)
 private _parent = _speaker getVariable [VAR_CLIPPED_TO, objNull];
-if (isNull _parent) then { _parent = _speaker getVariable ["jbl_mountedOn", objNull]; };
+if (isNull _parent) then { _parent = _speaker getVariable ["btspk_mountedOn", objNull]; };
 
 switch (_command) do {
     case "mount": {
         _args params [["_kind", ""], ["_position", ""]];
         if (_kind == "backpack") then {
-            if (_party) then { _position = "back"; }; // the PartyBox only mounts on the back
+            if (_party) then { _position = "back"; }; // the Party Speaker only mounts on the back
             if (!_party && {backpack _player == ""}) exitWith { ["You need a backpack for this speaker"] call _tell; };
             private _other = _player getVariable [VAR_CLIPPED, objNull];
             if (!isNull _other && {_other != _speaker}) exitWith { ["You already carry a speaker on your body"] call _tell; };
@@ -64,8 +64,8 @@ switch (_command) do {
     case "nudge": {
         if (isNull _parent) exitWith {};
         private _key = _args param [0, ""];
-        private _offset = +(_speaker getVariable ["jbl_mountOffset", [0, 0, 0]]);
-        private _turn = _speaker getVariable ["jbl_mountTurn", 0];
+        private _offset = +(_speaker getVariable ["btspk_mountOffset", [0, 0, 0]]);
+        private _turn = _speaker getVariable ["btspk_mountTurn", 0];
         private _step = 0.05;
         switch (_key) do {
             case "x+": { _offset set [0, (_offset select 0) + _step]; };
@@ -77,7 +77,7 @@ switch (_command) do {
             case "r+": { _turn = _turn + 15; };
             case "r-": { _turn = _turn - 15; };
         };
-        [_speaker, _parent, _offset, _turn, _speaker getVariable ["jbl_mountBone", ""], _speaker getVariable ["jbl_mountPreset", ""]] call FUNC(attach);
+        [_speaker, _parent, _offset, _turn, _speaker getVariable ["btspk_mountBone", ""], _speaker getVariable ["btspk_mountPreset", ""]] call FUNC(attach);
         [format ["Position: x %1, y %2, z %3, turn %4", (_offset select 0) toFixed 2, (_offset select 1) toFixed 2, (_offset select 2) toFixed 2, _turn]] call _tell;
     };
 };

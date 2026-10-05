@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 /*
  * Author: Raz
- * Server only. Copies a speaker's playback state to its PartyBoost followers and
+ * Server only. Copies a speaker's playback state to its Party Link followers and
  * tells every player to (re)start the sound.
  *
  * Arguments:
@@ -34,5 +34,5 @@ if (_members isEqualTo []) then {
     };
     [QGVAR(sync), [_x, _state]] call CBA_fnc_globalEvent;
     // The battery drains at a different speed now
-    ["jbl_battery_rebase", [_x]] call CBA_fnc_localEvent;
+    ["btspk_battery_rebase", [_x]] call CBA_fnc_localEvent;
 } forEach _members;

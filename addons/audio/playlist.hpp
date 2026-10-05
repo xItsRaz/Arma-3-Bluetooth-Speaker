@@ -3,7 +3,7 @@ class CfgSounds {
     sounds[] = {};
 };
 
-class jbl_audio_playlist {
+class btspk_audio_playlist {
     tracks[] = {};
     titles[] = {};
     durations[] = {};

@@ -1,5 +1,5 @@
 #define MAINPREFIX z
-#define PREFIX jbl
+#define PREFIX btspk
 
 #include "script_version.hpp"
 

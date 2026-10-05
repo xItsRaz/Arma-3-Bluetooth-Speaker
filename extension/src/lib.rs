@@ -1,6 +1,6 @@
-//! jbl_speaker: the Arma 3 extension behind the JBL Speaker mod.
+//! btspk_speaker: the Arma 3 extension behind the Bluetooth Speaker mod.
 //!
-//! SQF talks to it with `"jbl_speaker" callExtension [command, [args]]`:
+//! SQF talks to it with `"btspk_speaker" callExtension [command, [args]]`:
 //!   version                               -> extension version
 //!   init                                  -> "ok:<sample rate>" or "error:<reason>" (opens the sound card)
 //!   listener x y z fx fy fz               -> where you are and look (ASL position, view direction)
@@ -10,7 +10,7 @@
 //!   room size                             -> the size of the room you are in, in metres (shapes the echo)
 //!   stop id | stop_all | master v | level id | playing
 //!
-//! Callbacks (the ExtensionCallback event, name "jbl_speaker"): function "started" | "ended" |
+//! Callbacks (the ExtensionCallback event, name "btspk_speaker"): function "started" | "ended" |
 //! "error", data = the voice id (for "error": "id|reason").
 
 mod decode;
@@ -30,7 +30,7 @@ use arma_rs::{arma, Context, Extension};
 
 use mixer::{Listener, VoiceParams};
 
-const NAME: &str = "jbl_speaker";
+const NAME: &str = "btspk_speaker";
 /// Largest download we accept (bytes).
 const MAX_DOWNLOAD: u64 = 200 * 1024 * 1024;
 /// Decoded tracks kept in memory (about 46 MB each for 4 minutes).

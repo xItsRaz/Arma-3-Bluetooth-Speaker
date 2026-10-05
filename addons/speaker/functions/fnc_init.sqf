@@ -16,7 +16,7 @@ params [["_speaker", objNull, [objNull]]];
 if (isNull _speaker || {_speaker getVariable [QGVAR(initDone), false]}) exitWith {};
 _speaker setVariable [QGVAR(initDone), true];
 
-// PartyBoost: a deleted speaker leaves its group (a deleted leader ends it)
+// Party Link: a deleted speaker leaves its group (a deleted leader ends it)
 if (isServer) then {
     _speaker addEventHandler ["Deleted", { [_this select 0] call EFUNC(audio,unlink); }];
 

@@ -9,7 +9,7 @@ from pathlib import Path
 
 ADDON = Path(__file__).resolve().parent.parent / "addons" / "speaker"
 
-# (key, label, only for the JBL Speaker): the PartyBox only mounts on the back
+# (key, label, only for the Bluetooth Speaker): the Party Speaker only mounts on the back
 BACKPACK = [("back", "Back", False), ("side", "Side (hip)", True), ("under", "Under the backpack", True)]
 VEHICLE = [("roof", "Roof", False), ("rear", "Rear", False), ("front", "Front / hood", False)]
 NUDGES = [("x+", "X +"), ("x-", "X -"), ("y+", "Y +"), ("y-", "Y -"), ("z+", "Z +"), ("z-", "Z -"),
@@ -18,15 +18,15 @@ NUDGES = [("x+", "X +"), ("x-", "X -"), ("y+", "Y +"), ("y-", "Y -"), ("z+", "Z 
 SELF_EXCEPTIONS = 'exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};'
 
 # Conditions for the menu on the speaker (_target is the speaker)
-T_CLIPPED = "!isNull (_target getVariable ['jbl_clippedTo', objNull])"
-T_MOUNTED = "!isNull (_target getVariable ['jbl_mountedOn', objNull])"
+T_CLIPPED = "!isNull (_target getVariable ['btspk_clippedTo', objNull])"
+T_MOUNTED = "!isNull (_target getVariable ['btspk_mountedOn', objNull])"
 T_ATTACHED = f"({T_CLIPPED} || {{{T_MOUNTED}}})"
-T_CAN_BODY = ("isNull (_player getVariable ['jbl_clippedSpeaker', objNull]) || "
-              "{(_player getVariable ['jbl_clippedSpeaker', objNull]) == _target}")
-T_BODY_OK = f"({T_CAN_BODY}) && {{backpack _player != '' || {{_target isKindOf 'jbl_partybox'}}}}"
+T_CAN_BODY = ("isNull (_player getVariable ['btspk_clippedSpeaker', objNull]) || "
+              "{(_player getVariable ['btspk_clippedSpeaker', objNull]) == _target}")
+T_BODY_OK = f"({T_CAN_BODY}) && {{backpack _player != '' || {{_target isKindOf 'btspk_party'}}}}"
 
 # Conditions for the self menu (the speaker is the one clipped to the player)
-S_SPEAKER = "(_player getVariable ['jbl_clippedSpeaker', objNull])"
+S_SPEAKER = "(_player getVariable ['btspk_clippedSpeaker', objNull])"
 
 
 def action(indent, name, label, condition, statement, children="", extra="", modifier=""):
@@ -53,24 +53,24 @@ def target_menu():
 
     def presets(prefix, items, kind, command):
         children = []
-        for key, label, jbl_only in items:
+        for key, label, btspk_only in items:
             args = f"['{kind}', '{key}']" if command == "mount" else f"['{key}']"
-            condition = "!(_target isKindOf 'jbl_partybox')" if jbl_only else "true"
+            condition = "!(_target isKindOf 'btspk_party')" if btspk_only else "true"
             children.append(action(i + 8, f"{prefix}_{key}", label, condition,
-                                   f"[_target, _player, '{command}', {args}] call jbl_speaker_fnc_send"))
+                                   f"[_target, _player, '{command}', {args}] call btspk_speaker_fnc_send"))
         return "\n".join(children)
 
     nudges = "\n".join(action(i + 8, f"nudge_{k.replace('+', 'p').replace('-', 'm')}", label, "true",
-                              f"[_target, _player, 'nudge', ['{k}']] call jbl_speaker_fnc_send")
+                              f"[_target, _player, 'nudge', ['{k}']] call btspk_speaker_fnc_send")
                        for k, label in NUDGES)
-    out.append(action(i, "mount", "Mount", "[_target, _player] call jbl_common_fnc_canControl", "", children="\n".join([
+    out.append(action(i, "mount", "Mount", "[_target, _player] call btspk_common_fnc_canControl", "", children="\n".join([
         action(i + 4, "mtBackpack", "On my body", T_BODY_OK, "", children=presets("mtb", BACKPACK, "backpack", "mount")),
         action(i + 4, "mtVehicle", "On a vehicle (within 6 m)", f"!({T_CLIPPED})", "", children=presets("mtv", VEHICLE, "vehicle", "mount")),
         action(i + 4, "mtPosBody", "Move on my body", T_CLIPPED, "", children=presets("mtpb", BACKPACK, "backpack", "mountPos")),
         action(i + 4, "mtPosVehicle", "Move on the vehicle", T_MOUNTED, "", children=presets("mtpv", VEHICLE, "vehicle", "mountPos")),
         action(i + 4, "mtAdjust", "Adjust position", T_ATTACHED, "", children=nudges),
         action(i + 4, "mtTakeOff", "Take off and put down", T_ATTACHED,
-               "[_target, _player, 'unmount'] call jbl_speaker_fnc_send"),
+               "[_target, _player, 'unmount'] call btspk_speaker_fnc_send"),
     ])))
     return "\n".join(out) + "\n"
 
@@ -80,15 +80,15 @@ def self_menu():
 
     def presets(prefix, items, kind, command):
         children = []
-        for key, label, jbl_only in items:
+        for key, label, btspk_only in items:
             args = f"['{kind}', '{key}']" if command == "mount" else f"['{key}']"
-            condition = f"!({S_SPEAKER} isKindOf 'jbl_partybox')" if jbl_only else "true"
+            condition = f"!({S_SPEAKER} isKindOf 'btspk_party')" if btspk_only else "true"
             children.append(action(i + 8, f"{prefix}_{key}", label, condition,
-                                   f"[_player, '{command}', {args}] call jbl_speaker_fnc_clipped", extra=SELF_EXCEPTIONS))
+                                   f"[_player, '{command}', {args}] call btspk_speaker_fnc_clipped", extra=SELF_EXCEPTIONS))
         return "\n".join(children)
 
     nudges = "\n".join(action(i + 8, f"snudge_{k.replace('+', 'p').replace('-', 'm')}", label, "true",
-                              f"[_player, 'nudge', ['{k}']] call jbl_speaker_fnc_clipped", extra=SELF_EXCEPTIONS)
+                              f"[_player, 'nudge', ['{k}']] call btspk_speaker_fnc_clipped", extra=SELF_EXCEPTIONS)
                        for k, label in NUDGES)
     parts = [
         action(i, "cmPosition", "Position on my body", "true", "", children=presets("cmp", BACKPACK, "backpack", "mountPos"), extra=SELF_EXCEPTIONS),

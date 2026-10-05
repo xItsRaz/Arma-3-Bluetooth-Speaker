@@ -21,7 +21,7 @@ if (_damage >= 1) exitWith {
     _speaker setVariable [VAR_DAMAGED, true, true];
     _speaker setVariable [VAR_BROKEN, true, true];
     [_speaker] call EFUNC(audio,halt);
-    ["jbl_battery_rebase", [_speaker]] call CBA_fnc_localEvent;
+    ["btspk_battery_rebase", [_speaker]] call CBA_fnc_localEvent;
     [QGVAR(brokenFx), [_speaker]] call CBA_fnc_globalEvent;
 };
 

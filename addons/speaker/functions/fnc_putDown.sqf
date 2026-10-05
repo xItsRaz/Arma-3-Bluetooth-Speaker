@@ -21,8 +21,8 @@ if (isNull _speaker) exitWith {};
 private _oldUnit = _speaker getVariable [VAR_CLIPPED_TO, objNull];
 if (!isNull _oldUnit) then { _oldUnit setVariable [VAR_CLIPPED, objNull, true]; };
 _speaker setVariable [VAR_CLIPPED_TO, objNull, true];
-_speaker setVariable ["jbl_mountedOn", objNull, true];
-_speaker setVariable ["jbl_wasMounted", false];
+_speaker setVariable ["btspk_mountedOn", objNull, true];
+_speaker setVariable ["btspk_wasMounted", false];
 detach _speaker;
 
 private _around = [_unit, _speaker] select isNull _unit;

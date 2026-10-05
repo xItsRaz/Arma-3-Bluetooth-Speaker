@@ -15,14 +15,14 @@
 
 params ["_name", "_function", "_data"];
 
-if (_name != "jbl_speaker" || {_function != "error"}) exitWith {};
+if (_name != "btspk_speaker" || {_function != "error"}) exitWith {};
 
 private _parts = _data splitString "|";
 private _speaker = objectFromNetId (_parts param [0, ""]);
-diag_log format ["JBL Speaker: extension error: %1", _data];
+diag_log format ["Bluetooth Speaker: extension error: %1", _data];
 
 if (isNull _speaker) exitWith {};
 if (EGVAR(common,notifications) > 0) then {
-    systemChat format ["JBL: the sound extension could not play this track (%1). Using the built-in sound.", _parts param [1, "unknown error"]];
+    systemChat format ["Speaker: the sound extension could not play this track (%1). Using the built-in sound.", _parts param [1, "unknown error"]];
 };
 [_speaker, [], true] call FUNC(syncLocal);

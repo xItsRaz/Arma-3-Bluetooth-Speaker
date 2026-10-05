@@ -19,7 +19,7 @@ if (_action == "mute") exitWith {
     true
 };
 
-private _speaker = ((nearestObjects [player, ["jbl_speaker"], 5]) select {
+private _speaker = ((nearestObjects [player, ["btspk_speaker"], 5]) select {
     [_x, player] call EFUNC(common,canControl)
 }) param [0, objNull];
 if (isNull _speaker) exitWith {false};

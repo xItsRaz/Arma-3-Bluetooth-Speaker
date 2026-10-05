@@ -7,19 +7,19 @@
                         class GVAR(cmp_back) {
                             displayName = "Back";
                             condition = "true";
-                            statement = "[_player, 'mountPos', ['back']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'mountPos', ['back']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(cmp_side) {
                             displayName = "Side (hip)";
-                            condition = "!((_player getVariable ['jbl_clippedSpeaker', objNull]) isKindOf 'jbl_partybox')";
-                            statement = "[_player, 'mountPos', ['side']] call jbl_speaker_fnc_clipped";
+                            condition = "!((_player getVariable ['btspk_clippedSpeaker', objNull]) isKindOf 'btspk_party')";
+                            statement = "[_player, 'mountPos', ['side']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(cmp_under) {
                             displayName = "Under the backpack";
-                            condition = "!((_player getVariable ['jbl_clippedSpeaker', objNull]) isKindOf 'jbl_partybox')";
-                            statement = "[_player, 'mountPos', ['under']] call jbl_speaker_fnc_clipped";
+                            condition = "!((_player getVariable ['btspk_clippedSpeaker', objNull]) isKindOf 'btspk_party')";
+                            statement = "[_player, 'mountPos', ['under']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                 };
@@ -31,19 +31,19 @@
                         class GVAR(cmv_roof) {
                             displayName = "Roof";
                             condition = "true";
-                            statement = "[_player, 'mount', ['vehicle', 'roof']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'mount', ['vehicle', 'roof']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(cmv_rear) {
                             displayName = "Rear";
                             condition = "true";
-                            statement = "[_player, 'mount', ['vehicle', 'rear']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'mount', ['vehicle', 'rear']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(cmv_front) {
                             displayName = "Front / hood";
                             condition = "true";
-                            statement = "[_player, 'mount', ['vehicle', 'front']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'mount', ['vehicle', 'front']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                 };
@@ -55,49 +55,49 @@
                         class GVAR(snudge_xp) {
                             displayName = "X +";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['x+']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['x+']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(snudge_xm) {
                             displayName = "X -";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['x-']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['x-']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(snudge_yp) {
                             displayName = "Y +";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['y+']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['y+']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(snudge_ym) {
                             displayName = "Y -";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['y-']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['y-']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(snudge_zp) {
                             displayName = "Z +";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['z+']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['z+']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(snudge_zm) {
                             displayName = "Z -";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['z-']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['z-']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(snudge_rp) {
                             displayName = "Turn right";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['r+']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['r+']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                         class GVAR(snudge_rm) {
                             displayName = "Turn left";
                             condition = "true";
-                            statement = "[_player, 'nudge', ['r-']] call jbl_speaker_fnc_clipped";
+                            statement = "[_player, 'nudge', ['r-']] call btspk_speaker_fnc_clipped";
                             exceptions[] = {"isNotInside", "isNotSitting", "isNotSwimming"};
                         };
                 };

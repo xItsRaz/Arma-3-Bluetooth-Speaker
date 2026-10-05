@@ -21,15 +21,15 @@ private _file = getArray (configFile >> QGVAR(playlist) >> "files") param [_inde
 if (_file == "") exitWith {false};
 
 private _type = configOf _speaker;
-private _range = (missionNamespace getVariable [getText (_type >> "jbl_rangeSetting"), getNumber (_type >> "jbl_range")]) max 1;
+private _range = (missionNamespace getVariable [getText (_type >> "btspk_rangeSetting"), getNumber (_type >> "btspk_range")]) max 1;
 // Level 1-5 -> 0.2 .. 1, scaled by the speaker type's loudness
-private _gain = (0.2 * _level) * getNumber (_type >> "jbl_extensionGain") * (GVAR(extLoudness) / 100);
-_speaker setVariable ["jbl_extGain", _gain];
+private _gain = (0.2 * _level) * getNumber (_type >> "btspk_extensionGain") * (GVAR(extLoudness) / 100);
+_speaker setVariable ["btspk_extGain", _gain];
 
 private _position = getPosASL _speaker;
-private _result = "jbl_speaker" callExtension ["play", [netId _speaker, _file, _offset, _gain, _range, _position select 0, _position select 1, _position select 2]];
+private _result = "btspk_speaker" callExtension ["play", [netId _speaker, _file, _offset, _gain, _range, _position select 0, _position select 1, _position select 2]];
 if ((_result select 1) != 0 || {(_result select 0) select [0, 5] == "error"}) exitWith { false };
 
-_speaker setVariable ["jbl_extVoice", true];
+_speaker setVariable ["btspk_extVoice", true];
 GVAR(extVoices) pushBackUnique _speaker;
 true

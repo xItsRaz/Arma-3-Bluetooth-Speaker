@@ -13,7 +13,7 @@
 
 params [["_speaker", objNull, [objNull]]];
 
-if (!GVAR(enabled) || {_speaker isKindOf "jbl_partybox" && {!GVAR(partyboxBattery)}}) exitWith {100};
+if (!GVAR(enabled) || {_speaker isKindOf "btspk_party" && {!GVAR(partyBattery)}}) exitWith {100};
 
 (_speaker getVariable [VAR_BAT, [1, 0, 0]]) params ["_charge", "_time", "_rate"];
 ((((_charge + _rate * (NOW - _time)) max 0) min 1) * 100)

@@ -13,6 +13,6 @@
 
 params [["_speaker", objNull, [objNull]], ["_player", objNull, [objNull]]];
 
-_speaker setVariable ["jbl_generator", objNull, true];
+_speaker setVariable ["btspk_generator", objNull, true];
 [_speaker] call FUNC(update);
 [_player, "Unplugged"] call EFUNC(common,notify);

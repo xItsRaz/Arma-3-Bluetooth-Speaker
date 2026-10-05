@@ -1,5 +1,5 @@
 # Windows: (optionally convert music) + hemtt build + sound extension, then assemble a ready-to-load
-# @JBLSpeaker folder in .hemttout\build\ (addons, jbl_speaker_x64.dll, music\).
+# @BluetoothSpeaker folder in .hemttout\build\ (addons, btspk_speaker_x64.dll, music\).
 # Usage: powershell -File tools\make_mod.ps1 [-Music] [-NoExtension]
 param([switch]$Music, [switch]$NoExtension)
 $ErrorActionPreference = 'Stop'
@@ -23,14 +23,14 @@ if (-not $NoExtension -and (Get-Command cargo -ErrorAction SilentlyContinue)) {
     $failed = $LASTEXITCODE
     Pop-Location
     if ($failed) { throw 'cargo build failed' }
-    $dll = Join-Path $root 'extension\target\release\jbl_speaker_x64.dll'
+    $dll = Join-Path $root 'extension\target\release\btspk_speaker_x64.dll'
 }
 
 $out = Join-Path $root '.hemttout\build'
-$mod = Join-Path $out '@JBLSpeaker'
+$mod = Join-Path $out '@BluetoothSpeaker'
 if (Test-Path $mod) { Remove-Item $mod -Recurse -Force }
 New-Item -ItemType Directory $mod | Out-Null
-Get-ChildItem $out -Force | Where-Object Name -ne '@JBLSpeaker' | Copy-Item -Destination $mod -Recurse
+Get-ChildItem $out -Force | Where-Object Name -ne '@BluetoothSpeaker' | Copy-Item -Destination $mod -Recurse
 
 if ($dll -and (Test-Path $dll)) { Copy-Item $dll $mod }
 

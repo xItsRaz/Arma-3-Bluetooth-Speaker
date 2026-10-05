@@ -12,7 +12,7 @@ class Extended_PostInit_EventHandlers {
 
 // Every speaker is tracked by the server so charging sources can be checked
 class Extended_Init_EventHandlers {
-    class jbl_speaker {
+    class btspk_speaker {
         class ADDON {
             init = QUOTE(if (isServer) then { _this call FUNC(register) });
         };

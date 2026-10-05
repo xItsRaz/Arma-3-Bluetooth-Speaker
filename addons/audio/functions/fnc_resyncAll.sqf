@@ -12,4 +12,4 @@
  */
 
 if (!hasInterface || {isNil QFUNC(syncLocal)}) exitWith {};
-{ [_x] call FUNC(syncLocal); } forEach allMissionObjects "jbl_speaker";
+{ [_x] call FUNC(syncLocal); } forEach allMissionObjects "btspk_speaker";

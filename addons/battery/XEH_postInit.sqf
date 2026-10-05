@@ -10,14 +10,14 @@ if (isServer) then {
     // Cargo: remember which vehicle holds the speaker, the loop decides if it charges
     ["ace_cargoLoaded", {
         params ["_item", "_vehicle"];
-        if !(_item isKindOf "jbl_speaker") exitWith {};
-        _item setVariable ["jbl_cargoVehicle", _vehicle, true];
+        if !(_item isKindOf "btspk_speaker") exitWith {};
+        _item setVariable ["btspk_cargoVehicle", _vehicle, true];
         [_item] call FUNC(update);
     }] call CBA_fnc_addEventHandler;
     ["ace_cargoUnloaded", {
         params ["_item"];
-        if !(_item isKindOf "jbl_speaker") exitWith {};
-        _item setVariable ["jbl_cargoVehicle", objNull, true];
+        if !(_item isKindOf "btspk_speaker") exitWith {};
+        _item setVariable ["btspk_cargoVehicle", objNull, true];
         [_item] call FUNC(update);
     }] call CBA_fnc_addEventHandler;
 

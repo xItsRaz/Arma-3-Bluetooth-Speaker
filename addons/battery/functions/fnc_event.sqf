@@ -14,7 +14,7 @@
 
 params ["_speaker", "_token", "_event"];
 
-if (isNull _speaker || {(_speaker getVariable ["jbl_batToken", 0]) != _token}) exitWith {};
+if (isNull _speaker || {(_speaker getVariable ["btspk_batToken", 0]) != _token}) exitWith {};
 
 private _owner = _speaker getVariable [VAR_OWNER, ""];
 private _tell = {

@@ -10,8 +10,8 @@
  * 1: Player who sent it <OBJECT>
  * 2: Command <STRING>
  *    Playback: "play", "stop", "next", "prev", "track" (args: index), "volume" (args: 1-5)
- *    PartyBoost: "link", "unlink"
- *    Mounting: "mount", "mountPos", "unmount", "nudge" (see jbl_speaker_fnc_mountCommand)
+ *    Party Link: "link", "unlink"
+ *    Mounting: "mount", "mountPos", "unmount", "nudge" (see btspk_speaker_fnc_mountCommand)
  *    Battery: "plug", "unplug", "bank" (args: power bank rounds)
  *    Inventory: "pickup" (stops the music), "clip" (pick up onto your backpack, keeps playing)
  *    Ownership: "claim", "lock", "unlock", "release"
@@ -47,7 +47,7 @@ switch (_command) do {
     case "prev";
     case "track";
     case "volume": {
-        // A linked speaker controls its whole PartyBoost group through the leader
+        // A linked speaker controls its whole Party Link group through the leader
         private _target = _speaker getVariable [VAR_LEADER, objNull];
         if (isNull _target) then { _target = _speaker; };
         if !([_target, _player] call FUNC(canControl)) exitWith { [_target] call _deny; };

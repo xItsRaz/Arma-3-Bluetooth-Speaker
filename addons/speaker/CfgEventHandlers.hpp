@@ -11,7 +11,7 @@ class Extended_PostInit_EventHandlers {
 };
 
 class Extended_Init_EventHandlers {
-    class jbl_speaker {
+    class btspk_speaker {
         class ADDON {
             init = QUOTE(_this call FUNC(init));
         };

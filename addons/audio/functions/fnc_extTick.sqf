@@ -18,7 +18,7 @@ if (GVAR(extVoices) isEqualTo []) exitWith {};
 
 private _eye = AGLToASL positionCameraToWorld [0, 0, 0];
 private _direction = (AGLToASL positionCameraToWorld [0, 0, 1]) vectorDiff _eye;
-"jbl_speaker" callExtension ["listener", [_eye select 0, _eye select 1, _eye select 2, _direction select 0, _direction select 1, _direction select 2]];
+"btspk_speaker" callExtension ["listener", [_eye select 0, _eye select 1, _eye select 2, _direction select 0, _direction select 1, _direction select 2]];
 
 // The room: a roof over you and how far the walls are in 8 directions (about twice a second)
 GVAR(extRoomTick) = (GVAR(extRoomTick) + 1) mod 10;
@@ -38,22 +38,22 @@ if (GVAR(extRoomTick) == 0 && {GVAR(wallEffects) > 0}) then {
     };
     if (abs (_size - GVAR(extRoomSent)) > 1) then {
         GVAR(extRoomSent) = _size;
-        "jbl_speaker" callExtension ["room", [_size]];
+        "btspk_speaker" callExtension ["room", [_size]];
     };
 };
 
 GVAR(extIndex) = (GVAR(extIndex) + 1) mod count GVAR(extVoices);
 [GVAR(extVoices) select GVAR(extIndex), _eye] call FUNC(extUpdate);
 
-// Debug readout for the nearest speaker (Addon Options > JBL Speaker > Sound)
+// Debug readout for the nearest speaker (Addon Options > Bluetooth Speaker > Sound)
 if (GVAR(debug)) then {
     private _distances = GVAR(extVoices) apply {player distance _x};
     private _nearest = GVAR(extVoices) select (_distances find selectMin _distances);
-    private _info = _nearest getVariable ["jbl_extDebug", []];
+    private _info = _nearest getVariable ["btspk_extDebug", []];
     if (_info isNotEqualTo []) then {
         _info params ["_distance", "_walls", "_glass", "_open", "_muffle", "_gain", "_reverb"];
         hintSilent format [
-            "JBL sound debug (nearest speaker)\nDistance: %1 m\nWalls: %2   Glass: %3   Open path: %4\nMuffle: %5   Gain: %6\nEcho: %7   Room: %8 m (%9)",
+            "Sound debug (nearest speaker)\nDistance: %1 m\nWalls: %2   Glass: %3   Open path: %4\nMuffle: %5   Gain: %6\nEcho: %7   Room: %8 m (%9)",
             _distance toFixed 1, _walls, _glass, ["no", "yes"] select _open, _muffle toFixed 2, _gain toFixed 2,
             _reverb toFixed 2, GVAR(extRoomSent) toFixed 0, ["outdoors", "indoors"] select GVAR(extIndoor)
         ];
