@@ -4,7 +4,7 @@ Run with Blender 4.4 (the Arma 3 Object Builder addon v2.5.1 enabled):
     blender --background --python tools/blender/make_models.py -- <output folder> [<preview folder>]
 
 Writes jbl_speaker.p3d and jbl_partybox.p3d to the output folder, and (optional) preview PNGs.
-Sizes are in metres. Origin at the bottom centre, front facing +Y, Z up (PLAN.md section 15).
+Sizes are in metres. Origin at the bottom centre, front facing +Y, Z up.
 
 Parts and named selections (used by hiddenSelections in the config):
     JBL Speaker : camo (body + end caps), led_battery (5 LEDs), led_glow (rim rings), damage (body)

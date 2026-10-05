@@ -128,12 +128,11 @@ addons/
   lights/    party light show
 extension/   Rust sound extension
 tools/       build, music conversion, model generation
-PLAN.md      full design, decisions and roadmap
 ```
 
 ## Roadmap
 
-Next up (see [PLAN.md](PLAN.md) for the full list):
+Next up:
 - Tune the mount positions on the new models, then real textures and LED glow
 - AI that hears and investigates playing speakers
 - Spotify (via Spotify Connect, Premium account, personal use), line-in from a phone or PC, radio streams
@@ -143,4 +142,8 @@ Next up (see [PLAN.md](PLAN.md) for the full list):
 
 [CBA_A3](https://github.com/CBATeam/CBA_A3) and [ACE3](https://github.com/acemod/ACE3) (required, not included), [HEMTT](https://hemtt.dev/) (build), [arma-rs](https://github.com/BrettMayson/arma-rs), [cpal](https://github.com/RustAudio/cpal), [Symphonia](https://github.com/pdeljanov/Symphonia) and [ureq](https://github.com/algesten/ureq) (sound extension), [Arma 3 Object Builder for Blender](https://github.com/MrClock8163/Arma3ObjectBuilder) (model export).
 
-Arma 3 is a trademark of Bohemia Interactive. This is an unofficial community mod.
+## Trademarks and disclaimer
+
+JBL is a trademark of HARMAN International Industries, Incorporated, registered in the United States and other countries. Spotify is a registered trademark of Spotify AB. The Bluetooth word mark is a registered trademark owned by Bluetooth SIG, Inc. Arma 3 is a trademark of Bohemia Interactive a.s. All other trademarks are the property of their respective owners.
+
+This is an unofficial, fan-made project. It is not affiliated with, authorised, sponsored or endorsed by any of these companies. Product names are used only to describe what the speakers resemble or what the project plans to connect to. Spotify support is planned and **not implemented yet**; when it exists it will only work with a user's own Spotify Premium account, and using unofficial Spotify clients may go against Spotify's terms, so it is for personal use at your own risk.

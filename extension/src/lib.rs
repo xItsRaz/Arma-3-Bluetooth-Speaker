@@ -1,4 +1,4 @@
-//! jbl_speaker: the Arma 3 extension behind the JBL Speaker mod (PLAN.md section 2).
+//! jbl_speaker: the Arma 3 extension behind the JBL Speaker mod.
 //!
 //! SQF talks to it with `"jbl_speaker" callExtension [command, [args]]`:
 //!   version                               -> extension version

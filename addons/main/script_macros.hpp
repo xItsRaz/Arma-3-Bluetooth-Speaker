@@ -14,7 +14,7 @@
 // Wrap a function so event handlers always call the current (recompilable) version
 #define LINKFUNC(fncName) {_this call FUNC(fncName)}
 
-// Shared speaker state (object variables, see PLAN.md 16.2)
+// Shared speaker state (object variables)
 #define VAR_PLAYING "jbl_playing"
 #define VAR_TRACK   "jbl_track"
 #define VAR_START   "jbl_start"
@@ -30,7 +30,7 @@
 #define VAR_LEADER    "jbl_linkLeader"
 #define VAR_FOLLOWERS "jbl_linkFollowers"
 
-// Ownership (PLAN.md section 5): owner's player UID ("" = unowned) and whether others are locked out
+// Ownership: owner's player UID ("" = unowned) and whether others are locked out
 #define VAR_OWNER      "jbl_owner"
 #define VAR_OWNER_NAME "jbl_ownerName"
 #define VAR_LOCKED     "jbl_locked"
@@ -38,18 +38,18 @@
 // Synced clock: serverTime in MP, time in SP
 #define NOW ([time, serverTime] select isMultiplayer)
 
-// Inventory form (PLAN.md section 9): a magazine whose rounds are battery % + 1
+// Inventory form: a magazine whose rounds are battery % + 1
 #define MAG_SPEAKER   "jbl_speaker_mag"
 // Backpack clip: the unit points at its speaker, the speaker at its unit
 #define VAR_CLIPPED    "jbl_clippedSpeaker"
 #define VAR_CLIPPED_TO "jbl_clippedTo"
 
-// Battery (PLAN.md section 10): [chargeAtT 0-1, T, ratePerSecond]; current = c + rate * (NOW - T)
+// Battery: [chargeAtT 0-1, T, ratePerSecond]; current = c + rate * (NOW - T)
 #define VAR_BAT      "jbl_bat"
 #define VAR_DEAD     "jbl_dead"
 #define VAR_LOW      "jbl_low"
 #define VAR_CHARGING "jbl_charging"
 
-// Damage (PLAN.md section 12)
+// Damage
 #define VAR_DAMAGED "jbl_damaged"
 #define VAR_BROKEN  "jbl_broken"

@@ -23,3 +23,6 @@ addons/audio/sounds/titles.json
 
 # Blender preview renders of the models
 tools/blender/preview/
+
+# Private working notes (kept locally, not published)
+PLAN.md
