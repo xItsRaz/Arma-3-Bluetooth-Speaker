@@ -1,4 +1,4 @@
 name = "JBL Speaker";
 author = "Raz";
-overview = "A placeable speaker that plays your own playlist. Everyone nearby hears it, in sync.";
+overview = "Portable and party Bluetooth-style speakers: carry, mount on backpacks and vehicles, charge, break. Everyone nearby hears your playlist, in sync. Requires CBA_A3 and ACE3.";
 tooltip = "JBL Speaker";

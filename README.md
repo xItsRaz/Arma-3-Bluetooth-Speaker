@@ -1,44 +1,144 @@
-# JBL Speaker (Arma 3)
+# Bluetooth Speakers for Arma 3
 
-Bluetooth-style speakers for Arma 3. Requires **CBA_A3** (ACE3 from Session 3 on). See [PLAN.md](PLAN.md) for the full design and roadmap.
+Portable and party speakers that feel real. Carry one, set it down, clip it to your backpack, strap it to a car roof, plug it into a generator, shoot it. Everyone nearby hears the music coming from the speaker, in sync, and the sound reacts to distance, walls, glass and rooms.
 
-**Current state (Session 1):** a placeable speaker that plays a playlist packed into the mod. Everyone in range hears it in sync, and players who join late catch up. It's controlled from the scroll menu for now; ACE comes in Session 3.
+> **Status: alpha.** Working and tested in singleplayer on Windows. Multiplayer and dedicated servers are designed for (server-owned state, permission checks on the server) but not tested yet. Expect rough edges. The 3D models are first-pass blockouts with placeholder colours.
 
-## Get a build
-Every push to GitHub builds the mod automatically:
-1. Open the repo on GitHub → **Actions** → the latest **Build** run.
-2. Download the **JBLSpeaker** artifact.
-3. Unzip it into a folder named `@JBLSpeaker`.
-4. In the Arma 3 launcher: **Mods → ⋯ → Add local mod**, pick `@JBLSpeaker`, and also load **CBA_A3**.
+Requires **[CBA_A3](https://steamcommunity.com/workshop/filedetails/?id=450814997)** and **[ACE3](https://steamcommunity.com/workshop/filedetails/?id=463939057)**.
 
-GitHub builds have **no music**, because songs are never pushed. To hear something, build locally with your songs (below).
+> **Naming.** In game the two speakers currently show up as "JBL Speaker" and "JBL PartyBox", and internal names use a `jbl` prefix. These are working names from the project's start. The mod is not affiliated with or endorsed by any speaker manufacturer, and the names will be changed before a proper release.
 
-## Add your music (local build)
-One-time setup on the Mac: `brew install openssl@3 ffmpeg vorbis-tools` (HEMTT is in `~/.local/bin/hemtt`).
+## What you get
 
-1. Put your songs (mp3, m4a, flac, wav...) in the `music/` folder. Nothing in it is ever pushed.
-2. Run `python3 tools/convert_music.py`. It converts them to mono Ogg Vorbis in `addons/audio/sounds/` and rebuilds the playlist. Songs already converted are skipped.
-3. Run `~/.local/bin/hemtt release`. The finished mod is zipped at `releases/jbl-latest.zip` (it contains an `@jbl` folder).
-4. Copy the zip to the Windows PC, unzip it, and load `@jbl` as a local mod together with CBA_A3.
+| | Portable speaker | Party speaker |
+|---|---|---|
+| Looks like | rugged cylindrical Bluetooth speaker (223 mm, about 1 kg) | floor-standing party speaker (about 57 cm tall, about 11 kg) |
+| Who can place it | any player, from the inventory (or Eden / Zeus) | **Eden and Zeus only** |
+| Pick up into inventory | yes | no |
+| Carry / drag / load into vehicle cargo | carry, cargo | carry, drag, cargo |
+| Mount on backpack | back, hip or under the backpack (needs a backpack) | back only (no backpack needed) |
+| Mount on vehicles | roof, rear, front | roof, rear, front |
+| Range | 75 m (setting) | 200 m (setting) |
+| Battery | yes | no (setting) |
+| Lights | - | colour light show at night |
 
-## Build on Windows
-`powershell -File tools\make_mod.ps1` builds everything into `.hemttoutuild\@JBLSpeaker` (hidden folder): the addons, the sound extension `jbl_speaker_x64.dll`, and your converted songs in `music\`. Add `-Music` to convert the songs in `music/` first. Load that folder with CBA_A3 and ACE3.
+**Playback**
+- Plays a playlist of songs packed into the mod (you add your own, see below). Play, stop, next, previous, pick a song, volume 1 to 5.
+- Everyone in range hears the same moment of the same song. Players who join late catch up.
+- **PartyBoost**: link up to 8 speakers within 15 m, they play in sync and any of them controls the group.
 
-One-time setup: Python 3 and ffmpeg (`winget install Python.Python.3.12 Gyan.FFmpeg`), HEMTT (download `windows-x64.zip` from its GitHub releases), and for the extension Rust (`rustup`, GNU toolchain) plus MinGW (`winget install BrechtSanders.WinLibs.POSIX.UCRT`).
+**Rules and ownership**
+- Whoever places a speaker owns it. Owners can lock it to themselves or unlock it for everyone. Eden or Zeus placed speakers start unowned (first to claim, anyone, or admins only, a server setting).
+- Admins, Zeus and singleplayer can always control every speaker. The server checks every command again, so a modified client can't skip the rules.
 
-**The sound extension** gives smoother volume, quieter speakers behind walls, echo indoors and sound that finds open doors. It needs the game to run **without BattlEye** (the Arma launcher has a start option for that). Without the DLL, or with it blocked, everything still works with Arma's built-in sound. Check the `.rpt` for "JBL Speaker: sound extension active".
+**Battery and damage**
+- The battery drains while playing, faster at higher volume, and does not drain while idle. Warnings at 10% and when empty.
+- Charge from a running vehicle (loaded in cargo, mounted on it, or on the back of someone sitting in it), from a generator, or with a power bank item.
+- Speakers can be damaged (plays slightly lower) and broken (stops, smokes, can no longer be used).
 
-## Build tools
-- [HEMTT](https://hemtt.dev/): `hemtt check` (lint), `hemtt build` (dev build), `hemtt release` (zip + signing).
-- `include/x/cba/` holds CBA's macro headers, used by every `script_component.hpp`.
+**Mounting**
+- Mount on your body or on a vehicle. A live **Adjust position** menu moves the speaker 5 cm at a time, so you can fine-tune the fit. Mounted speakers keep playing and a vehicle-mounted one charges while the engine runs. If the vehicle is destroyed the speaker drops.
+- A **Backpack speaker** self menu controls a speaker that is on your back.
 
-## Use in game
-Needs **CBA_A3** and **ACE3**. In Eden, place **JBL Speaker** (Props). Look at it and open ACE interaction (default **Windows key**) → **Speaker**:
-- **Play / Stop / Next song / Previous song**, **Pick a song**, **Volume 1–5** (4 is normal).
-- **PartyBoost**: link nearby speakers so they play in sync; unlink one or all.
-- **Ownership**: claim an unowned speaker (it's locked to you), unlock it for everyone, lock it again, or give it up.
-- **Speaker info**: owner, lock, PartyBoost, volume and song.
+**Sound extension (optional)**
+- A small native DLL replaces Arma's built-in 3D sound. It gives smooth volume changes, a proper distance curve, left/right panning, walls and glass that muffle the sound, sound that bends through open doors and windows, and echo that follows the size of the room. Details below.
+- Without it everything still works with Arma's built-in sound.
 
-Self-interaction (**Ctrl+Windows**) has **Mute all speakers (for me)**. Keybinds (unbound by default) are in **Options → Controls → Configure Addons → JBL Speaker**. Settings: **Options → Addon Options → JBL Speaker**.
+## Using it in game
 
-Admins, Zeus and single player can always control every speaker.
+In Eden place **JBL Speaker** (Props) or **JBL PartyBox**. Look at a speaker and open the ACE interaction menu (default: Windows key):
+
+- **Play / Stop / Next / Previous**, **Pick a song**, **Volume**
+- **PartyBoost**: link nearby speakers, unlink one or all
+- **Mount**: on my body, on a vehicle (within 6 m), move, adjust position, take off
+- **Charging**: plug into a generator, use a power bank. **Check battery** is open to everyone
+- **Pick up** (portable speaker only): into the inventory, or **Pick up and keep playing** to clip it to your backpack
+- **Ownership**: claim, unlock for everyone, lock, give up
+- **Speaker info**
+
+Self interaction (Ctrl+Windows): **Place speaker** and **Clip speaker to backpack** from the inventory, **Backpack speaker** controls, **Mute all speakers (for me)**.
+
+Keybinds (unbound by default): Options, Controls, Configure Addons. Play/stop, next song, volume up/down and mute act on the nearest speaker you can control within 5 m.
+
+Settings: Options, Addon Options. Server settings are forced on everyone (permissions, ranges, battery, damage, PartyBoost limits), client settings are personal (mute, volume, notifications, lights, sound effects, debug readout).
+
+## Adding music
+
+Songs are never part of the repository (copyright). To hear something, build the mod locally with your own songs:
+
+1. Put your songs (mp3, m4a, flac, wav and more) in the `music/` folder.
+2. Run `python tools/convert_music.py`. It converts them to mono Ogg Vorbis in `addons/audio/sounds/`, translates non-English titles to English (Arma's fonts cannot show every script; see `tools/glossary.json`), and rebuilds the playlist. Songs that are already converted are skipped. Titles live in `addons/audio/sounds/titles.json` and can be edited by hand.
+3. Build the mod (below). The songs are packed into the mod for Arma's own sound and also copied to a `music` folder next to the DLL for the sound extension.
+
+## Build it yourself
+
+### Windows
+
+One-time setup:
+- [HEMTT](https://hemtt.dev/) (download the Windows zip from its releases)
+- Python 3 and ffmpeg: `winget install Python.Python.3.12 Gyan.FFmpeg`
+- For the sound extension: Rust (`rustup`, GNU toolchain) and MinGW (`winget install BrechtSanders.WinLibs.POSIX.UCRT`)
+- Optional, to binarize the 3D models: Arma 3 Tools (Steam). HEMTT finds it on its own.
+
+Then run:
+
+```
+powershell -File tools\make_mod.ps1            # add -Music to convert your songs first
+```
+
+The finished mod is in `.hemttout\build\@JBLSpeaker` (a hidden folder): the addons, `jbl_speaker_x64.dll` and your `music` folder. Load it in the Arma 3 launcher (Mods, Add local mod) together with CBA_A3 and ACE3.
+
+### Other systems
+
+`hemtt check` (lint), `hemtt build` (dev build) and `hemtt release` (zip and signing) work anywhere HEMTT runs. The sound extension is Windows only and is built with `cargo build --release` in `extension/`.
+
+### GitHub builds
+
+Every push builds the addons in GitHub Actions and uploads them as the **JBLSpeaker** artifact, and builds the sound extension as **JBLSpeaker-extension**. These builds contain **no music**.
+
+## The sound extension
+
+`extension/` is a Rust library (`jbl_speaker_x64.dll`) that Arma loads with `callExtension`. It decodes the songs, mixes every speaker in 3D and plays them through your sound card. When it is installed the mod uses it automatically; check the Arma `.rpt` log for `JBL Speaker: sound extension active`.
+
+- **BattlEye:** Arma blocks extensions that BattlEye has not approved, so the game must be started **without BattlEye** to use the DLL (the launcher has a start option for this). That limits you to servers with BattlEye off. Without the DLL everything still works with Arma's built-in sound.
+- **What it does:** distance falloff that reaches the speaker's range, panning from where you look, muffling through walls (about 15 dB per wall) and glass (a few dB, dull), sound that comes through an open door or window when a wall blocks the straight line, and echo with early reflections, a tail and a slap echo in big rooms.
+- **Tuning:** Addon Options, JBL Speaker, Sound has a loudness slider, a setting for how many effects to compute, and a **Sound debug readout** that shows what the extension decided for the nearest speaker.
+
+## 3D models
+
+The two models are generated by a Blender script, so they are reproducible and editable as code: `tools/blender/make_models.py`. It needs Blender 4.4 with the [Arma 3 Object Builder](https://github.com/MrClock8163/Arma3ObjectBuilder) addon (that addon's newest release supports Blender up to 4.4):
+
+```
+blender --background --python tools/blender/make_models.py
+```
+
+It writes `addons/speaker/models/*.p3d` with all LODs, named selections, memory points and mass. Colours are procedural for now, real textures are on the roadmap.
+
+## Repository layout
+
+```
+addons/
+  main/      mod-wide macros
+  common/    permissions, command router, settings
+  audio/     playlist, sync, sound extension bridge (walls, echo)
+  speaker/   speaker objects, ACE menus, carry, cargo, mounting, damage, models
+  battery/   battery, charging, power bank
+  lights/    party light show
+extension/   Rust sound extension
+tools/       build, music conversion, model generation
+PLAN.md      full design, decisions and roadmap
+```
+
+## Roadmap
+
+Next up (see [PLAN.md](PLAN.md) for the full list):
+- Tune the mount positions on the new models, then real textures and LED glow
+- AI that hears and investigates playing speakers
+- Spotify (via Spotify Connect, Premium account, personal use), line-in from a phone or PC, radio streams
+- Playing from links, localisation, a public API for mission makers, Eden attributes
+
+## Third-party
+
+[CBA_A3](https://github.com/CBATeam/CBA_A3) and [ACE3](https://github.com/acemod/ACE3) (required, not included), [HEMTT](https://hemtt.dev/) (build), [arma-rs](https://github.com/BrettMayson/arma-rs), [cpal](https://github.com/RustAudio/cpal), [Symphonia](https://github.com/pdeljanov/Symphonia) and [ureq](https://github.com/algesten/ureq) (sound extension), [Arma 3 Object Builder for Blender](https://github.com/MrClock8163/Arma3ObjectBuilder) (model export).
+
+Arma 3 is a trademark of Bohemia Interactive. This is an unofficial community mod.
